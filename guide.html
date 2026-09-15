@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>펼침면 나누기 사용 설명</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='17' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='15.25' y='3' width='1.5' height='26' rx='.75' fill='%23e5484d'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  --bg: #f5f4f0; --surface: #ffffff; --surface-2: #efede7; --ink: #1d1d1b; --ink-2: #4a4944; --muted: #8a8880;
+  --line: #e4e1d9; --line-strong: #d2cec3; --primary: #1d1d1b; --primary-ink: #fff;
+  --accent: #e5484d; --accent-soft: rgba(229, 72, 77, .14); --paper: #ffffff; --text-line: #cfcbc1;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131312; --surface: #1c1c1a; --surface-2: #252522; --ink: #ededea; --ink-2: #c4c2ba; --muted: #8f8d86;
+    --line: #2f2e2b; --line-strong: #403f3a; --primary: #ededea; --primary-ink: #151514;
+    --accent: #ff6369; --accent-soft: rgba(255, 99, 105, .18); --paper: #2a2a27; --text-line: #4a4843;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131312; --surface: #1c1c1a; --surface-2: #252522; --ink: #ededea; --ink-2: #c4c2ba; --muted: #8f8d86;
+  --line: #2f2e2b; --line-strong: #403f3a; --primary: #ededea; --primary-ink: #151514;
+  --accent: #ff6369; --accent-soft: rgba(255, 99, 105, .18); --paper: #2a2a27; --text-line: #4a4843;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.75 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased; word-break: keep-all;
+}
+a { color: inherit; }
+.topbar {
+  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 14px 24px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+.brand svg { width: 26px; height: 26px; }
+.brand small { font-weight: 500; color: var(--muted); }
+.spacer { flex: 1; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; text-decoration: none;
+  font-size: 14px; font-weight: 600; background: var(--primary); color: var(--primary-ink);
+}
+.btn:hover { opacity: .9; }
+
+.layout { display: grid; grid-template-columns: 210px minmax(0, 720px); gap: 56px; justify-content: center; padding: 48px 24px 96px; }
+.toc { position: sticky; top: 96px; align-self: start; font-size: 14px; }
+.toc b { display: block; font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.toc a { display: block; padding: 5px 0 5px 12px; border-left: 2px solid var(--line); color: var(--ink-2); text-decoration: none; }
+.toc a:hover { color: var(--ink); border-color: var(--ink-2); }
+
+article h1 { font-size: clamp(30px, 4.4vw, 40px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 14px; }
+article .lead { font-size: 18px; color: var(--ink-2); margin: 0 0 36px; }
+article h2 { font-size: 24px; letter-spacing: -.02em; line-height: 1.35; margin: 64px 0 14px; display: flex; align-items: center; gap: 12px; }
+article h2 .n {
+  flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
+  background: var(--primary); color: var(--primary-ink); font-size: 15px;
+}
+article h3 { font-size: 17px; margin: 28px 0 6px; }
+article p { margin: 0 0 14px; }
+article ul, article ol { padding-left: 22px; margin: 0 0 14px; }
+article li { margin: 4px 0; }
+.muted { color: var(--muted); }
+
+.hero {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 28px 20px 20px; margin-bottom: 20px;
+}
+.hero svg { display: block; width: 100%; height: auto; }
+.hero figcaption { text-align: center; color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 8px; padding: 0; list-style: none; counter-reset: s; }
+.steps li { margin: 0; padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); counter-increment: s; font-size: 14.5px; line-height: 1.55; }
+.steps li::before { content: counter(s); display: block; font-weight: 800; color: var(--accent); font-size: 13px; margin-bottom: 2px; }
+.steps li b { display: block; font-size: 16px; margin-bottom: 2px; }
+
+.ui {
+  display: inline-block; padding: 0 7px; border-radius: 6px; font-size: .9em; font-weight: 600; line-height: 1.7;
+  background: var(--surface); border: 1px solid var(--line-strong); white-space: nowrap;
+}
+code { font: 500 .88em/1 ui-monospace, Consolas, monospace; padding: 2px 5px; border-radius: 5px; background: var(--surface-2); word-break: break-all; }
+kbd {
+  font: 600 12.5px/1 ui-monospace, Consolas, monospace; padding: 3px 7px; border-radius: 6px;
+  border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); white-space: nowrap;
+}
+.note {
+  padding: 14px 16px; border-radius: 12px; margin: 18px 0; font-size: 15px;
+  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+}
+.note b { color: var(--ink); }
+
+.options { display: grid; gap: 10px; margin: 16px 0; }
+.option { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.option .ui { justify-self: start; }
+.option p { margin: 0; font-size: 15px; }
+
+.figure { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.figure figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 14px 10px; }
+.figure svg { display: block; width: 100%; height: auto; }
+.figure figcaption { font-size: 13.5px; color: var(--ink-2); text-align: center; margin-top: 8px; line-height: 1.5; }
+
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 13px; color: var(--muted); font-weight: 600; background: var(--surface-2); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 8px 0; }
+summary { cursor: pointer; padding: 13px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 20px; line-height: 1; }
+details[open] summary::after { content: "−"; }
+details > div { padding: 0 16px 14px; color: var(--ink-2); font-size: 15px; }
+details > div p:last-child { margin-bottom: 0; }
+
+footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 40px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 32px 16px 72px; }
+  .toc { display: none; }
+  .steps { grid-template-columns: 1fr; }
+  .figure { grid-template-columns: 1fr; }
+  .option { grid-template-columns: 1fr; gap: 6px; }
+  .topbar { padding: 12px 16px; }
+  .brand small { display: none; }
+  td:first-child { white-space: normal; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="17" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="15.25" y="3" width="1.5" height="26" rx=".75" fill="var(--accent)"/></svg>
+    펼침면 나누기 <small>사용 설명</small>
+  </a>
+  <div class="spacer"></div>
+  <a class="btn" href="index.html">도구 열기 →</a>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="목차">
+    <b>목차</b>
+    <a href="#start">시작하기</a>
+    <a href="#open">1. 파일 열기</a>
+    <a href="#check">2. 나눌 쪽 확인</a>
+    <a href="#line">3. 분할선 맞추기</a>
+    <a href="#overlap">4. 가운데 겹침</a>
+    <a href="#dir">5. 읽기 방향</a>
+    <a href="#save">6. PDF 만들기</a>
+    <a href="#keys">단축키</a>
+    <a href="#faq">자주 묻는 질문</a>
+  </nav>
+
+  <article>
+    <h1 id="start">펼침면 나누기 사용 설명</h1>
+    <p class="lead">책을 펼쳐서 스캔하면 한 장에 두 쪽이 들어가요. 이 도구는 그런 PDF를 왼쪽 쪽과 오른쪽 쪽으로 나눠서 한 쪽씩 넘겨 볼 수 있는 새 PDF로 만들어요.</p>
+
+    <figure class="hero">
+      <svg viewBox="0 0 640 210" role="img" aria-label="두 쪽이 한 장에 있는 스캔이 두 장의 쪽으로 나뉘는 그림">
+        <g>
+          <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round">
+            <path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/>
+            <path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/>
+          </g>
+          <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
+          <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">분할선</text>
+        </g>
+        <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M296 110h52M338 100l10 10-10 10"/>
+        </g>
+        <g>
+          <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
+          <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
+          <circle cx="435" cy="176" r="10" fill="var(--primary)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="var(--primary-ink)">1</text>
+          <circle cx="565" cy="176" r="10" fill="var(--primary)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="var(--primary-ink)">2</text>
+        </g>
+      </svg>
+      <figcaption>스캔 한 장 → 쪽 두 장</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><b>PDF 끌어다 놓기</b><code>index.html</code>을 브라우저로 열고 스캔 PDF를 올려요.</li>
+      <li><b>미리보기 확인</b>빨간 분할선이 책 가운데에 맞는지 봐요.</li>
+      <li><b>PDF 만들기</b>버튼을 누르면 <code>원래이름_split.pdf</code>로 저장돼요.</li>
+    </ol>
+    <p class="muted">대부분은 이 세 단계로 끝나요. 아래는 결과가 마음에 들지 않을 때 쓰는 기능들이에요.</p>
+
+    <h2 id="open"><span class="n">1</span>파일 열기</h2>
+    <p><code>index.html</code>을 더블클릭해서 크롬, 엣지, 웨일 같은 브라우저로 열어요. 설치할 건 없어요.</p>
+    <ul>
+      <li>PDF 파일을 화면에 <b>끌어다 놓거나</b>, 가운데 상자를 눌러 파일을 골라요.</li>
+      <li>작업 중에 다른 PDF를 끌어다 놓거나 왼쪽 위 <span class="ui">바꾸기</span>를 누르면 파일이 바뀌어요.</li>
+    </ul>
+    <div class="note"><b>파일은 업로드되지 않아요.</b> 모든 처리는 내 컴퓨터의 브라우저 안에서 해요. 처음 열 때 PDF를 읽는 프로그램(pdf.js, pdf-lib)을 인터넷에서 받아오기 때문에 인터넷 연결만 있으면 돼요.</div>
+
+    <h2 id="check"><span class="n">2</span>나눌 쪽 확인하기</h2>
+    <p>파일을 열면 쪽마다 미리보기 카드가 생겨요. 도구가 <b>가로로 긴 쪽은 펼침면</b>으로 보고 나누기로, <b>세로로 긴 쪽</b>(앞표지, 뒤표지 같은)은 통째로 설정해 둬요.</p>
+    <p>카드 아래 버튼으로 쪽마다 바꿀 수 있어요.</p>
+    <div class="options">
+      <div class="option"><span class="ui">나누기</span><p>분할선을 기준으로 두 쪽으로 나눠요. 미리보기 위의 숫자가 결과 PDF에서의 쪽 번호예요.</p></div>
+      <div class="option"><span class="ui">통째로</span><p>나누지 않고 그대로 넣어요. 표지나 한 장짜리 쪽에 써요.</p></div>
+      <div class="option"><span class="ui">빼기</span><p>결과 PDF에 넣지 않아요. 빈 종이나 잘못 찍힌 스캔을 버릴 때 써요.</p></div>
+    </div>
+    <p>여러 쪽을 한꺼번에 바꾸려면 왼쪽 설정의 <span class="ui">나눌 쪽 한꺼번에 고르기</span>에서 <span class="ui">가로 쪽만</span> · <span class="ui">모두</span> · <span class="ui">나누지 않음</span> 중에 골라요. 왼쪽 아래에 <b>원본 몇 쪽 → 결과 몇 쪽</b>이 바로 표시돼요.</p>
+
+    <h2 id="line"><span class="n">3</span>분할선 맞추기</h2>
+    <p>스캔할 때 책이 한가운데 놓이지 않으면 제본선이 가운데에서 벗어나요. 그러면 한쪽 쪽의 글자가 옆 쪽으로 넘어가요. 세 가지 방법으로 맞출 수 있어요.</p>
+
+    <h3>전체를 한꺼번에: 분할선 위치</h3>
+    <p>왼쪽 설정의 <span class="ui">분할선 위치</span> 슬라이더를 움직이면 모든 쪽의 분할선이 같이 움직여요. 스캐너에 책을 늘 같은 자리에 놓았다면 이것만으로 충분해요.</p>
+
+    <h3>쪽마다 따로: 빨간 선 끌기</h3>
+    <p>미리보기에서 빨간 선에 마우스를 올리면 손잡이가 나타나요. 끌어서 옮기면 <b>그 쪽만</b> 따로 조정되고, 쪽 번호 아래에 조정한 위치(예: <span style="color:var(--accent);font-weight:600">52.3%</span>)가 표시돼요.</p>
+    <ul>
+      <li>선을 <kbd>더블클릭</kbd>하면 전체 설정 위치로 돌아가요.</li>
+      <li>따로 조정한 쪽이 있으면 <span class="ui">개별 조정 지우기</span> 버튼으로 한꺼번에 되돌릴 수 있어요.</li>
+      <li>미리보기를 더블클릭하거나 돋보기 버튼을 누르면 <b>크게 보기</b> 창이 열려서 더 정확하게 맞출 수 있어요.</li>
+    </ul>
+
+    <h3>알아서 찾기: 자동 맞춤</h3>
+    <p><span class="ui">자동 맞춤</span>을 누르면 나누기로 표시된 쪽마다 제본선을 찾아서 분할선을 옮겨요. 가운데의 <b>그림자</b>나 글자가 없는 <b>빈 여백</b>을 기준으로 찾아요. 쪽이 많으면 시간이 걸리고, 진행 중에 버튼을 한 번 더 누르면 멈춰요.</p>
+    <div class="note">자동 맞춤은 그림이 가운데까지 걸친 쪽이나 여백이 거의 없는 쪽에서 틀릴 수 있어요. 돌린 뒤에 미리보기를 한 번 훑어보고, 이상한 쪽만 손으로 고쳐 주세요.</div>
+
+    <h2 id="overlap"><span class="n">4</span>가운데 겹침</h2>
+    <p>분할선 양옆을 얼마나 넣을지 정해요. 슬라이더를 가운데(0%)에 두면 분할선에서 딱 잘라요.</p>
+    <div class="figure">
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 플러스로 하면 가운데 부분이 양쪽 쪽에 모두 들어감">
+          <rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/>
+          <rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/>
+          <g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g>
+          <path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/>
+          <g stroke="var(--ink-2)" stroke-width="1.5" fill="none"><path d="M10 146h134M116 142h134" stroke-dasharray="1 0"/></g>
+        </svg>
+        <figcaption><b>+ (겹치기)</b> 제본선 근처가 양쪽 쪽에 모두 들어가요.<br>글자가 가운데까지 붙어 있을 때 잘리지 않아요.</figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 마이너스로 하면 가운데 부분이 잘려 나감">
+          <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs>
+          <rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/>
+          <rect x="116" y="15" width="28" height="120" fill="url(#hatch)"/>
+          <g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g>
+          <path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/>
+          <g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g>
+        </svg>
+        <figcaption><b>− (잘라내기)</b> 가운데 띠를 버려요.<br>제본선의 검은 그림자를 없앨 때 좋아요.</figcaption>
+      </figure>
+    </div>
+    <p>미리보기에서 겹치는 부분은 <span style="background:var(--accent-soft);padding:0 6px;border-radius:4px">옅은 빨강</span>으로, 잘려 나가는 부분은 빗금으로 보여요. 보통은 <b>+0.5% ~ +1%</b> 정도가 무난해요.</p>
+
+    <h2 id="dir"><span class="n">5</span>읽기 방향</h2>
+    <p>나눈 두 쪽 중 어느 쪽을 먼저 둘지 정해요.</p>
+    <table>
+      <thead><tr><th>설정</th><th>순서</th><th>이런 책에</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ui">왼쪽 → 오른쪽</span></td><td>왼쪽 쪽, 그다음 오른쪽 쪽</td><td>한글·영어 가로쓰기 책 대부분</td></tr>
+        <tr><td><span class="ui">오른쪽 → 왼쪽</span></td><td>오른쪽 쪽, 그다음 왼쪽 쪽</td><td>세로쓰기 옛 책, 일본 만화·소설</td></tr>
+      </tbody>
+    </table>
+    <p>미리보기의 쪽 번호가 방향에 맞춰 바뀌니 눈으로 확인할 수 있어요.</p>
+
+    <h2 id="save"><span class="n">6</span>PDF 만들기</h2>
+    <p><span class="ui">PDF 만들기</span>를 누르면 진행 막대가 차오르고, 끝나면 <code>원래이름_split.pdf</code>가 브라우저의 다운로드 폴더에 저장돼요. 저장 뒤 나오는 <span class="ui">다시 받기</span>와 <span class="ui">열어 보기</span>로 결과를 바로 확인할 수 있어요.</p>
+    <p>결과가 마음에 들지 않으면 설정을 고치고 다시 누르면 돼요. 원본 파일은 바뀌지 않아요.</p>
+
+    <h2 id="keys">단축키</h2>
+    <table>
+      <thead><tr><th>키</th><th>하는 일</th><th>어디서</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>이전 쪽 / 다음 쪽</td><td>크게 보기</td></tr>
+        <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>나누기 / 통째로 / 빼기</td><td>크게 보기</td></tr>
+        <tr><td><kbd>Tab</kbd>으로 선 선택 후 <kbd>←</kbd> <kbd>→</kbd></td><td>분할선을 0.2%씩 옮기기 (<kbd>Shift</kbd>를 같이 누르면 1%씩)</td><td>미리보기, 크게 보기</td></tr>
+        <tr><td>선 <kbd>더블클릭</kbd></td><td>이 쪽의 분할선을 전체 설정으로 되돌리기</td><td>미리보기, 크게 보기</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>크게 보기 닫기</td><td>크게 보기</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="faq">자주 묻는 질문</h2>
+    <details open>
+      <summary>나누면 화질이 떨어지나요?</summary>
+      <div><p>아니요. 스캔 이미지를 다시 그리거나 압축하지 않아요. 원래 쪽을 그대로 두고 <b>보이는 영역(페이지 상자)만</b> 절반으로 바꾸기 때문에 화질이 원본과 같아요. 같은 이미지를 두 쪽이 함께 쓰므로 파일 크기도 거의 늘지 않아요.</p></div>
+    </details>
+    <details>
+      <summary>OCR로 넣은 글자(검색되는 텍스트)도 남나요?</summary>
+      <div><p>네, 남아요. 다만 보이는 영역만 자르는 방식이라 글자 정보는 두 쪽에 모두 들어 있어요. 그래서 PDF 뷰어에서 검색하면 반대쪽 글자가 걸리거나, 텍스트를 추출하면 옆 쪽 글자가 섞일 수 있어요. 깔끔한 텍스트가 필요하면 나눈 PDF로 OCR을 다시 하는 게 좋아요.</p></div>
+    </details>
+    <details>
+      <summary>잘려 나간 부분이 다른 프로그램에서 다시 보이지 않나요?</summary>
+      <div><p>일반 뷰어와 전자책 리더(리디북스, Moon+ Reader, Boox 등), 인쇄에서는 보이지 않아요. 하지만 원본 이미지는 파일 안에 그대로 있어서 PDF 편집 프로그램으로 페이지 상자를 넓히면 다시 볼 수 있어요. 가려야 하는 내용이 있다면 이 도구로 숨기지 마세요.</p></div>
+    </details>
+    <details>
+      <summary>90도 돌아간 스캔도 되나요?</summary>
+      <div><p>네. PDF에 회전 정보가 들어 있는 경우 화면에 보이는 방향을 기준으로 나눠요. 이미지 자체가 옆으로 누운 채 저장된 경우(회전 정보 없이)는 먼저 다른 프로그램으로 쪽을 바로 세운 뒤 여세요.</p></div>
+    </details>
+    <details>
+      <summary>파일이 크면 어떻게 되나요?</summary>
+      <div><p>브라우저 메모리 안에서 처리하므로 수백 MB짜리 파일도 열 수 있지만 느려질 수 있어요. 미리보기는 화면에 보이는 쪽만 그리고, 자동 맞춤은 쪽 수에 비례해서 시간이 걸려요. 너무 무거우면 크롬이나 엣지에서 다른 탭을 닫고 시도해 보세요.</p></div>
+    </details>
+    <details>
+      <summary>암호가 걸린 PDF가 안 열려요.</summary>
+      <div><p>열기 암호가 있는 PDF는 열 수 없어요. 열기는 되지만 인쇄·편집만 제한한 PDF(권한 암호)도 내용이 암호화되어 있어서 나눌 수 없어요. 두 경우 모두 PDF 프로그램에서 암호를 해제한 사본을 만든 뒤 열어 주세요.</p></div>
+    </details>
+    <details>
+      <summary>"라이브러리를 불러오지 못했어요"라고 떠요.</summary>
+      <div><p>PDF를 읽는 프로그램을 인터넷에서 받아오지 못한 거예요. 인터넷 연결을 확인하고 새로고침해 주세요. 회사 방화벽이 <code>cdnjs.cloudflare.com</code>을 막고 있을 수도 있어요.</p></div>
+    </details>
+  </article>
+</div>
+
+<footer>펼침면 나누기 · 모든 처리는 브라우저 안에서 이루어집니다</footer>
+</body>
+</html>

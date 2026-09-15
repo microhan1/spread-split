@@ -1,0 +1,11 @@
+# 블로그 원고·발행용 이미지 (저장소에는 올리지 않음)
+doc/
+
+# 테스트·작업 산출물
+_test/
+*_split.pdf
+
+# 기타
+.claude/
+Thumbs.db
+desktop.ini
