@@ -652,10 +652,14 @@ article.doc.active { display: block; }
   };
   const KEY = 'spreadSplit.lang';
   const sel = document.getElementById('lang');
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+  };
   function pick() {
     const h = location.hash.replace('#', '').slice(0, 2);
     if (UI[h]) return h;
-    const saved = localStorage.getItem(KEY);
+    const saved = store.get(KEY);
     if (UI[saved]) return saved;
     for (const l of navigator.languages || [navigator.language || 'en']) { const p = l.toLowerCase().slice(0, 2); if (UI[p]) return p; }
     return 'en';
@@ -672,7 +676,14 @@ article.doc.active { display: block; }
     if (updateHash) history.replaceState(null, '', '#' + lang);
   }
   show(pick(), false);
-  sel.addEventListener('change', () => { localStorage.setItem(KEY, sel.value); show(sel.value, true); window.scrollTo({ top: 0 }); });
+  // #en-overlap 처럼 절 위치까지 담긴 주소로 열면, 해당 언어를 켠 뒤 그 절로 이동한다
+  // (글이 숨겨진 상태에서는 브라우저가 스크롤하지 못하므로 직접 옮긴다)
+  const target = location.hash.length > 3 && document.getElementById(location.hash.slice(1));
+  if (target) {
+    target.scrollIntoView();
+    window.addEventListener('load', () => target.scrollIntoView(), { once: true });   // 글꼴·이미지 로드로 높이가 바뀐 뒤 한 번 더
+  }
+  sel.addEventListener('change', () => { store.set(KEY, sel.value); show(sel.value, true); window.scrollTo({ top: 0 }); });
   // 목차 링크(#ko-open 등)는 언어를 바꾸지 않도록, 언어 코드만 있는 해시에만 반응
   window.addEventListener('hashchange', () => { const h = location.hash.replace('#', ''); if (UI[h]) show(h, false); });
 })();

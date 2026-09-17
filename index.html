@@ -584,13 +584,18 @@ const I18N = {
 };
 const LANG_KEY = 'spreadSplit.lang';
 let LANG = 'ko';
+// 저장소가 막힌 환경(사생활 보호 모드, 일부 file:// 등)에서도 동작하도록 감싼다
+const store = {
+  get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+};
 const t = (key, vars) => {
   let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.ko[key] ?? key;
   if (vars) for (const k in vars) s = s.replaceAll('{' + k + '}', vars[k]);
   return s;
 };
 function detectLang() {
-  const saved = localStorage.getItem(LANG_KEY);
+  const saved = store.get(LANG_KEY);
   if (I18N[saved]) return saved;
   for (const l of navigator.languages || [navigator.language || 'en']) {
     const p = l.toLowerCase().slice(0, 2);
@@ -618,9 +623,9 @@ const POS_MIN = 0.1, POS_MAX = 0.9;
 
 applyLang(detectLang());
 document.getElementById('lang').addEventListener('change', e => {
-  localStorage.setItem(LANG_KEY, e.target.value);
+  store.set(LANG_KEY, e.target.value);
   applyLang(e.target.value);
-  refresh();
+  refresh({ keepDone: true });   // 언어만 바뀐 것이므로 만들어 둔 결과 링크는 그대로 둔다
 });
 
 if (!window.pdfjsLib || !window.PDFLib) {
@@ -894,7 +899,7 @@ function numbering() {
 
 const MODE_KEYS = { split: 'modeSplit', whole: 'modeWhole', skip: 'modeSkip' };
 
-function refresh() {
+function refresh({ keepDone = false } = {}) {
   if (el.workspace.hidden) return;
   const nums = numbering();
   const total = nums.reduce((a, x) => a + x.length, 0);
@@ -936,7 +941,7 @@ function refresh() {
   document.querySelectorAll('#dirSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dir === S.dir));
 
   if (el.viewer.open) paintViewer();
-  el.done.hidden = true;
+  if (!keepDone) el.done.hidden = true;
 }
 
 /* ───────── panel controls ───────── */
