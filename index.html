@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>펼침면 나누기</title>
+<meta name="description" content="두 쪽이 한 장에 담긴 스캔 PDF를 왼쪽·오른쪽 쪽으로 나누는 브라우저 도구. Split two-page scanned PDF spreads in your browser.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='17' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='15.25' y='3' width='1.5' height='26' rx='.75' fill='%23e5484d'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -52,7 +53,9 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
-button, input { font: inherit; color: inherit; }
+html[lang="ja"] body { font-family: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; }
+html[lang="zh"] body { font-family: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 [hidden] { display: none !important; }
@@ -60,22 +63,29 @@ button { cursor: pointer; }
 /* ── top bar ── */
 .topbar {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 10px;
   padding: 14px 24px;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; }
-.brand svg { width: 26px; height: 26px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+.brand svg { width: 26px; height: 26px; flex: none; }
 .brand small { font-weight: 500; color: var(--muted); margin-left: 2px; }
 .topbar .spacer { flex: 1; }
 .link-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 12px; border-radius: 9px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink-2); text-decoration: none; font-size: 14px;
+  background: var(--surface); color: var(--ink-2); text-decoration: none; font-size: 14px; white-space: nowrap;
 }
 .link-btn:hover { border-color: var(--line-strong); color: var(--ink); }
+.lang {
+  appearance: none; -webkit-appearance: none;
+  padding: 7px 30px 7px 12px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8880' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: var(--ink-2); font-size: 14px; cursor: pointer;
+}
+.lang:hover { border-color: var(--line-strong); color: var(--ink); }
 
 /* ── empty state ── */
 .empty { max-width: 760px; margin: 0 auto; padding: 72px 20px 48px; text-align: center; }
@@ -267,11 +277,13 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
 @media (max-width: 880px) {
   .workspace { grid-template-columns: 1fr; padding: 16px; }
   .panel { position: static; max-height: none; }
-  .topbar { padding: 12px 16px; }
+  .topbar { padding: 12px 16px; gap: 8px; }
   .features { grid-template-columns: 1fr; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
   .v-head .seg { width: auto; }
   .brand small { display: none; }
+  .link-btn span { display: none; }
+  .link-btn { padding: 7px 9px; }
 }
 </style>
 </head>
@@ -280,20 +292,26 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
 <header class="topbar">
   <div class="brand">
     <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="17" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="15.25" y="3" width="1.5" height="26" rx=".75" fill="var(--accent)"/></svg>
-    펼침면 나누기 <small>Spread Split</small>
+    <span data-i18n="brand">펼침면 나누기</span> <small data-i18n="brandSub">Spread Split</small>
   </div>
   <div class="spacer"></div>
-  <a class="link-btn" href="guide.html" target="_blank" rel="noopener">
+  <select class="lang" id="lang" aria-label="Language">
+    <option value="ko">한국어</option>
+    <option value="en">English</option>
+    <option value="zh">中文</option>
+    <option value="ja">日本語</option>
+  </select>
+  <a class="link-btn" id="guideLink" href="guide.html" target="_blank" rel="noopener">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.6-2.7 2.6M12 16.8h.01"/></svg>
-    사용 설명
+    <span data-i18n="guide">사용 설명</span>
   </a>
 </header>
 
 <main>
   <!-- empty -->
   <section id="empty" class="empty">
-    <h1>펼쳐서 스캔한 PDF를<br>한 쪽씩 나눕니다</h1>
-    <p class="lead">한 장에 두 쪽이 담긴 스캔본을 왼쪽·오른쪽으로 잘라 새 PDF로 만들어요.</p>
+    <h1 data-i18n="h1">펼쳐서 스캔한 PDF를<br>한 쪽씩 나눕니다</h1>
+    <p class="lead" data-i18n="lead">한 장에 두 쪽이 담긴 스캔본을 왼쪽·오른쪽으로 잘라 새 PDF로 만들어요.</p>
     <label class="drop" id="drop" tabindex="0">
       <svg class="drop-art" viewBox="0 0 132 84" fill="none" aria-hidden="true">
         <rect x="6" y="10" width="56" height="68" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"/>
@@ -303,77 +321,77 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
         </g>
         <path d="M66 2v80" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
       </svg>
-      <strong>PDF 파일을 여기에 끌어다 놓으세요</strong>
-      <span>또는 눌러서 파일 고르기</span>
+      <strong data-i18n="dropMain">PDF 파일을 여기에 끌어다 놓으세요</strong>
+      <span data-i18n="dropSub">또는 눌러서 파일 고르기</span>
       <input id="file" type="file" accept="application/pdf,.pdf" hidden>
     </label>
     <div id="loading" class="loading" hidden>
-      <div id="loadingText">파일 여는 중…</div>
+      <div id="loadingText"></div>
       <div class="bar"><i id="loadingBar"></i></div>
     </div>
     <div class="features">
-      <div class="feature"><b>화질 그대로</b><p>이미지를 다시 압축하지 않고 보이는 영역만 잘라서 원본 화질과 OCR 글자를 유지해요.</p></div>
-      <div class="feature"><b>파일은 내 컴퓨터에만</b><p>모든 처리는 브라우저 안에서 끝나요. 서버로 올라가지 않아요.</p></div>
-      <div class="feature"><b>쪽마다 조정</b><p>분할선을 끌어서 옮기거나 자동 맞춤으로 제본선을 찾을 수 있어요.</p></div>
+      <div class="feature"><b data-i18n="f1t"></b><p data-i18n="f1p"></p></div>
+      <div class="feature"><b data-i18n="f2t"></b><p data-i18n="f2p"></p></div>
+      <div class="feature"><b data-i18n="f3t"></b><p data-i18n="f3p"></p></div>
     </div>
   </section>
 
   <!-- workspace -->
   <section id="workspace" class="workspace" hidden>
-    <aside class="panel" aria-label="설정">
+    <aside class="panel" id="panel">
       <div class="group">
         <div class="file-row">
           <div>
             <div class="file-name" id="fName"></div>
             <div class="file-meta" id="fMeta"></div>
           </div>
-          <button class="btn ghost" id="btnOther" title="다른 파일 열기">바꾸기</button>
+          <button class="btn ghost" id="btnOther" data-i18n="change" data-i18n-title="changeTitle"></button>
         </div>
       </div>
 
       <div class="group">
-        <div class="label">읽기 방향</div>
+        <div class="label" data-i18n="dir"></div>
         <div class="seg" id="dirSeg">
-          <button data-dir="ltr" aria-pressed="true">왼쪽 → 오른쪽</button>
-          <button data-dir="rtl" aria-pressed="false">오른쪽 → 왼쪽</button>
+          <button data-dir="ltr" aria-pressed="true" data-i18n="ltr"></button>
+          <button data-dir="rtl" aria-pressed="false" data-i18n="rtl"></button>
         </div>
-        <p class="hint">세로쓰기 책이나 일본 만화는 오른쪽 쪽이 먼저예요.</p>
+        <p class="hint" data-i18n="dirHint"></p>
       </div>
 
       <div class="group">
-        <div class="label"><span>분할선 위치</span><output id="posOut">50.0%</output></div>
-        <input type="range" id="pos" min="30" max="70" step="0.1" value="50" aria-label="분할선 위치">
+        <div class="label"><span data-i18n="pos"></span><output id="posOut">50.0%</output></div>
+        <input type="range" id="pos" min="30" max="70" step="0.1" value="50" data-i18n-aria="pos">
         <div class="row">
-          <button class="btn" id="btnAuto">자동 맞춤</button>
-          <button class="btn" id="btnClear" disabled>개별 조정 지우기</button>
+          <button class="btn" id="btnAuto" data-i18n="auto"></button>
+          <button class="btn" id="btnClear" disabled data-i18n="clear"></button>
         </div>
-        <p class="hint">미리보기의 빨간 선을 끌면 그 쪽만 따로 옮겨져요.</p>
+        <p class="hint" data-i18n="posHint"></p>
       </div>
 
       <div class="group">
-        <div class="label"><span>가운데 겹침</span><output id="ovOut">0.0%</output></div>
-        <input type="range" id="overlap" min="-4" max="4" step="0.1" value="0" aria-label="가운데 겹침">
-        <p class="hint"><b>+</b> 쪽마다 제본선 부분을 조금 더 넣고, <b>−</b> 가운데 그림자를 잘라내요.</p>
+        <div class="label"><span data-i18n="overlap"></span><output id="ovOut">0.0%</output></div>
+        <input type="range" id="overlap" min="-4" max="4" step="0.1" value="0" data-i18n-aria="overlap">
+        <p class="hint" data-i18n="overlapHint"></p>
       </div>
 
       <div class="group">
-        <div class="label">나눌 쪽 한꺼번에 고르기</div>
+        <div class="label" data-i18n="bulk"></div>
         <div class="seg" id="bulkSeg">
-          <button data-bulk="auto" aria-pressed="false">가로 쪽만</button>
-          <button data-bulk="split" aria-pressed="false">모두</button>
-          <button data-bulk="whole" aria-pressed="false">나누지 않음</button>
+          <button data-bulk="auto" aria-pressed="false" data-i18n="bulkAuto"></button>
+          <button data-bulk="split" aria-pressed="false" data-i18n="bulkAll"></button>
+          <button data-bulk="whole" aria-pressed="false" data-i18n="bulkNone"></button>
         </div>
-        <p class="hint">보통은 <b>가로 쪽만</b>이 맞아요. 세로로 긴 표지는 그대로 둬요.</p>
+        <p class="hint" data-i18n="bulkHint"></p>
       </div>
 
       <div class="summary">
-        <span>원본 <b id="sumIn">0</b>쪽</span>
+        <span><span data-i18n="sumSrc"></span> <b id="sumIn">0</b><span data-i18n="pagesUnit"></span></span>
         <span class="arrow">→</span>
-        <span>결과 <b id="sumOut">0</b>쪽</span>
+        <span><span data-i18n="sumOut"></span> <b id="sumOut">0</b><span data-i18n="pagesUnit"></span></span>
       </div>
       <button class="btn primary big" id="btnBuild">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14"/></svg>
-        PDF 만들기
+        <span id="btnBuildLabel" data-i18n="build"></span>
       </button>
       <div class="bar" id="buildBarWrap" hidden><i id="buildBar"></i></div>
       <div class="done" id="done" hidden></div>
@@ -381,11 +399,11 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
 
     <div>
       <div class="grid-head">
-        <h2>미리보기</h2>
+        <h2 data-i18n="preview"></h2>
         <div class="legend">
-          <span><i></i>분할선</span>
-          <span><i class="band"></i>겹치는 부분</span>
-          <span>선 더블클릭 = 되돌리기</span>
+          <span><i></i><span data-i18n="legendLine"></span></span>
+          <span><i class="band"></i><span data-i18n="legendBand"></span></span>
+          <span data-i18n="legendDbl"></span>
         </div>
       </div>
       <div class="grid" id="grid"></div>
@@ -393,33 +411,203 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
   </section>
 </main>
 
-<dialog class="viewer" id="viewer" aria-label="크게 보기">
+<dialog class="viewer" id="viewer" data-i18n-aria="zoomTitle">
   <div class="v-head">
     <span class="title" id="vTitle"></span>
     <div class="spacer"></div>
     <div class="seg" id="vSeg">
-      <button data-mode="split">나누기</button>
-      <button data-mode="whole">통째로</button>
-      <button data-mode="skip">빼기</button>
+      <button data-mode="split" data-i18n="modeSplit"></button>
+      <button data-mode="whole" data-i18n="modeWhole"></button>
+      <button data-mode="skip" data-i18n="modeSkip"></button>
     </div>
-    <button class="icon-btn" id="vClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <button class="icon-btn" id="vClose" data-i18n-aria="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
   <div class="v-stage"><div class="thumb" id="vThumb"><canvas></canvas></div></div>
   <div class="v-foot">
-    <button class="btn" id="vPrev">← 이전 쪽</button>
+    <button class="btn" id="vPrev" data-i18n="prev"></button>
     <div class="v-info" id="vInfo"></div>
-    <button class="btn" id="vNext">다음 쪽 →</button>
+    <button class="btn" id="vNext" data-i18n="next"></button>
   </div>
 </dialog>
 
 <div class="toast" id="toast" role="status"></div>
-<div class="drag-veil" id="veil" hidden>여기에 놓으면 이 파일로 바꿔요</div>
+<div class="drag-veil" id="veil" hidden data-i18n="veil"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
 (() => {
 'use strict';
+
+/* ───────── i18n ───────── */
+const I18N = {
+  ko: {
+    brand: '펼침면 나누기', brandSub: 'Spread Split', guide: '사용 설명', docTitle: '펼침면 나누기',
+    h1: '펼쳐서 스캔한 PDF를<br>한 쪽씩 나눕니다',
+    lead: '한 장에 두 쪽이 담긴 스캔본을 왼쪽·오른쪽으로 잘라 새 PDF로 만들어요.',
+    dropMain: 'PDF 파일을 여기에 끌어다 놓으세요', dropSub: '또는 눌러서 파일 고르기',
+    loadingOpen: '파일 여는 중…', loadingPages: '쪽 정보 읽는 중… {i} / {n}',
+    f1t: '화질 그대로', f1p: '이미지를 다시 압축하지 않고 보이는 영역만 잘라서 원본 화질과 OCR 글자를 유지해요.',
+    f2t: '파일은 내 컴퓨터에만', f2p: '모든 처리는 브라우저 안에서 끝나요. 서버로 올라가지 않아요.',
+    f3t: '쪽마다 조정', f3p: '분할선을 끌어서 옮기거나 자동 맞춤으로 제본선을 찾을 수 있어요.',
+    change: '바꾸기', changeTitle: '다른 파일 열기',
+    dir: '읽기 방향', ltr: '왼쪽 → 오른쪽', rtl: '오른쪽 → 왼쪽', dirHint: '세로쓰기 책이나 일본 만화는 오른쪽 쪽이 먼저예요.',
+    pos: '분할선 위치', auto: '자동 맞춤', autoBusy: '찾는 중 {done}/{total} · 멈추기', clear: '개별 조정 지우기', clearN: '개별 조정 지우기 ({n})',
+    posHint: '미리보기의 빨간 선을 끌면 그 쪽만 따로 옮겨져요.',
+    overlap: '가운데 겹침', overlapHint: '<b>+</b> 쪽마다 제본선 부분을 조금 더 넣고, <b>−</b> 가운데 그림자를 잘라내요.',
+    bulk: '나눌 쪽 한꺼번에 고르기', bulkAuto: '가로 쪽만', bulkAll: '모두', bulkNone: '나누지 않음',
+    bulkHint: '보통은 <b>가로 쪽만</b>이 맞아요. 세로로 긴 표지는 그대로 둬요.',
+    sumSrc: '원본', sumOut: '결과', pagesUnit: '쪽', build: 'PDF 만들기',
+    preview: '미리보기', legendLine: '분할선', legendBand: '겹치는 부분', legendDbl: '선 더블클릭 = 되돌리기',
+    modeSplit: '나누기', modeWhole: '통째로', modeSkip: '빼기', pageN: '{n}쪽', zoomN: '{n}쪽 크게 보기', zoomTitle: '크게 보기', close: '닫기',
+    prev: '← 이전 쪽', next: '다음 쪽 →', skipMark: '결과에서 빠짐', cutLabel: '분할선',
+    vTitle: '{i}쪽 / {n}쪽', vLine: '분할선 {p}', vCustom: '이 쪽만 조정됨', vReset: '되돌리기',
+    vHint: '· 선을 끌거나 <span class="kbd">Tab</span> 후 <span class="kbd">←</span><span class="kbd">→</span>',
+    vWhole: '이 쪽은 나누지 않고 그대로 넣어요', vSkip: '이 쪽은 결과에 넣지 않아요',
+    meta: '{n}쪽 · {size} · 펼침면 {s}쪽',
+    tBusy: 'PDF를 만드는 중이에요. 끝난 뒤에 다시 시도해 주세요.', tPdfOnly: 'PDF 파일만 열 수 있어요.',
+    tNoPages: '쪽이 하나도 없는 PDF예요.', tEncrypted: '보안 설정(암호)이 걸린 PDF는 나눌 수 없어요. 암호를 해제한 사본으로 다시 열어 주세요.',
+    tPassword: '암호가 걸린 PDF는 열 수 없어요. 암호를 푼 뒤 다시 열어 주세요.', tReadFail: 'PDF를 읽지 못했어요. 파일이 손상되지 않았는지 확인해 주세요.',
+    tLibFail: '필요한 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 새로고침해 주세요.',
+    tCleared: '모든 쪽이 기본 분할선을 따라가요.', tNoSplit: '나누기로 표시된 쪽이 없어요.',
+    tFound: '{n}쪽의 제본선을 찾았어요. 미리보기에서 확인해 주세요.', tNotFound: '제본선을 뚜렷하게 찾지 못했어요. 직접 조정해 주세요.',
+    tBuildErr: 'PDF를 만들다가 문제가 생겼어요: {msg}',
+    progRead: '원본 읽는 중…', progCopy: '쪽 복사하는 중…', progSplit: '쪽 나누는 중… {i}/{n}', progSave: '저장하는 중…', progDone: '완성!',
+    done: '완성했어요. ', doneInfo: '{n}쪽 · {size} ', again: '다시 받기', view: '열어 보기',
+    veil: '여기에 놓으면 이 파일로 바꿔요', producer: '펼침면 나누기 (pdf-lib)',
+  },
+  en: {
+    brand: 'Spread Split', brandSub: 'two-page scan splitter', guide: 'Guide', docTitle: 'Spread Split',
+    h1: 'Split scanned book spreads<br>into single pages',
+    lead: 'Turn a PDF scanned two pages per sheet into a new PDF with one page per sheet.',
+    dropMain: 'Drop a PDF file here', dropSub: 'or click to choose a file',
+    loadingOpen: 'Opening file…', loadingPages: 'Reading pages… {i} / {n}',
+    f1t: 'Original quality', f1p: 'Images are never re-encoded. Only the visible area is trimmed, so quality and OCR text stay intact.',
+    f2t: 'Files stay on your computer', f2p: 'Everything runs inside the browser. Nothing is uploaded to a server.',
+    f3t: 'Adjust per page', f3p: 'Drag the split line on any page, or let auto-fit find the gutter for you.',
+    change: 'Change', changeTitle: 'Open another file',
+    dir: 'Reading order', ltr: 'Left → right', rtl: 'Right → left', dirHint: 'Vertical-text books and manga read the right page first.',
+    pos: 'Split position', auto: 'Auto-fit', autoBusy: 'Finding {done}/{total} · Stop', clear: 'Reset per-page lines', clearN: 'Reset per-page lines ({n})',
+    posHint: 'Drag the red line in a preview to move that page only.',
+    overlap: 'Center overlap', overlapHint: '<b>+</b> includes a little of the gutter on both pages; <b>−</b> trims the gutter shadow away.',
+    bulk: 'Choose pages to split', bulkAuto: 'Landscape only', bulkAll: 'All', bulkNone: 'None',
+    bulkHint: '<b>Landscape only</b> is usually right: portrait covers are kept whole.',
+    sumSrc: 'Source', sumOut: 'Result', pagesUnit: ' pages', build: 'Create PDF',
+    preview: 'Preview', legendLine: 'split line', legendBand: 'overlap', legendDbl: 'double-click line = reset',
+    modeSplit: 'Split', modeWhole: 'Whole', modeSkip: 'Skip', pageN: 'p. {n}', zoomN: 'Enlarge page {n}', zoomTitle: 'Enlarge', close: 'Close',
+    prev: '← Previous', next: 'Next →', skipMark: 'Skipped', cutLabel: 'Split line',
+    vTitle: 'Page {i} of {n}', vLine: 'Split at {p}', vCustom: 'Adjusted on this page', vReset: 'Reset',
+    vHint: '· drag the line, or press <span class="kbd">Tab</span> then <span class="kbd">←</span><span class="kbd">→</span>',
+    vWhole: 'This page is kept whole', vSkip: 'This page is left out of the result',
+    meta: '{n} pages · {size} · {s} spreads',
+    tBusy: 'Still creating the PDF. Please try again when it finishes.', tPdfOnly: 'Only PDF files can be opened.',
+    tNoPages: 'This PDF has no pages.', tEncrypted: 'This PDF is protected (encrypted) and cannot be split. Please remove the password first.',
+    tPassword: 'Password-protected PDFs cannot be opened. Please remove the password first.', tReadFail: 'Could not read the PDF. Please check that the file is not damaged.',
+    tLibFail: 'Could not load the required libraries. Check your internet connection and reload.',
+    tCleared: 'All pages now follow the global split line.', tNoSplit: 'No page is marked to be split.',
+    tFound: 'Found the gutter on {n} pages. Please check the previews.', tNotFound: 'Could not find a clear gutter. Please adjust manually.',
+    tBuildErr: 'Something went wrong while creating the PDF: {msg}',
+    progRead: 'Reading source…', progCopy: 'Copying pages…', progSplit: 'Splitting pages… {i}/{n}', progSave: 'Saving…', progDone: 'Done!',
+    done: 'Done. ', doneInfo: '{n} pages · {size} ', again: 'Download again', view: 'Open',
+    veil: 'Drop to replace the current file', producer: 'Spread Split (pdf-lib)',
+  },
+  zh: {
+    brand: '跨页拆分', brandSub: 'Spread Split', guide: '使用说明', docTitle: '跨页拆分',
+    h1: '把摊开扫描的 PDF<br>拆成单页',
+    lead: '将一张含两页的扫描件按左右页裁开，生成新的 PDF。',
+    dropMain: '把 PDF 文件拖到这里', dropSub: '或点击选择文件',
+    loadingOpen: '正在打开文件…', loadingPages: '正在读取页面信息… {i} / {n}',
+    f1t: '画质不变', f1p: '不重新压缩图片，只裁剪可见区域，保留原始画质和 OCR 文字。',
+    f2t: '文件只在本机处理', f2p: '所有处理都在浏览器内完成，不会上传到服务器。',
+    f3t: '逐页调整', f3p: '可拖动分割线，或用自动对齐找到装订线。',
+    change: '更换', changeTitle: '打开其他文件',
+    dir: '阅读方向', ltr: '左 → 右', rtl: '右 → 左', dirHint: '竖排书籍和日本漫画先读右页。',
+    pos: '分割线位置', auto: '自动对齐', autoBusy: '查找中 {done}/{total} · 停止', clear: '清除逐页调整', clearN: '清除逐页调整 ({n})',
+    posHint: '拖动预览中的红线，只移动该页的分割线。',
+    overlap: '中间重叠', overlapHint: '<b>+</b> 让两页都多含一点装订线部分；<b>−</b> 裁掉中间的阴影。',
+    bulk: '批量选择要拆分的页', bulkAuto: '仅横向页', bulkAll: '全部', bulkNone: '不拆分',
+    bulkHint: '通常选 <b>仅横向页</b> 即可，竖向的封面保持原样。',
+    sumSrc: '原文件', sumOut: '结果', pagesUnit: ' 页', build: '生成 PDF',
+    preview: '预览', legendLine: '分割线', legendBand: '重叠部分', legendDbl: '双击分割线 = 还原',
+    modeSplit: '拆分', modeWhole: '整页', modeSkip: '排除', pageN: '第 {n} 页', zoomN: '放大第 {n} 页', zoomTitle: '放大查看', close: '关闭',
+    prev: '← 上一页', next: '下一页 →', skipMark: '不计入结果', cutLabel: '分割线',
+    vTitle: '第 {i} 页 / 共 {n} 页', vLine: '分割线 {p}', vCustom: '仅此页已调整', vReset: '还原',
+    vHint: '· 拖动分割线，或按 <span class="kbd">Tab</span> 后用 <span class="kbd">←</span><span class="kbd">→</span>',
+    vWhole: '此页不拆分，整页保留', vSkip: '此页不计入结果',
+    meta: '{n} 页 · {size} · 跨页 {s} 页',
+    tBusy: '正在生成 PDF，请稍后再试。', tPdfOnly: '只能打开 PDF 文件。',
+    tNoPages: '这个 PDF 没有任何页面。', tEncrypted: '带有安全设置（加密）的 PDF 无法拆分，请先解除密码后再打开。',
+    tPassword: '无法打开带密码的 PDF，请先解除密码。', tReadFail: '无法读取 PDF，请确认文件没有损坏。',
+    tLibFail: '无法加载所需的库，请检查网络连接后刷新页面。',
+    tCleared: '所有页面已恢复为默认分割线。', tNoSplit: '没有标记为拆分的页面。',
+    tFound: '已在 {n} 页找到装订线，请在预览中确认。', tNotFound: '未能明确找到装订线，请手动调整。',
+    tBuildErr: '生成 PDF 时出错：{msg}',
+    progRead: '正在读取原文件…', progCopy: '正在复制页面…', progSplit: '正在拆分页面… {i}/{n}', progSave: '正在保存…', progDone: '完成！',
+    done: '已完成。', doneInfo: '{n} 页 · {size} ', again: '再次下载', view: '打开查看',
+    veil: '放开即可替换当前文件', producer: 'Spread Split (pdf-lib)',
+  },
+  ja: {
+    brand: '見開き分割', brandSub: 'Spread Split', guide: '使い方', docTitle: '見開き分割',
+    h1: '見開きスキャンの PDF を<br>1 ページずつに分けます',
+    lead: '1 枚に 2 ページ写ったスキャンを左右に切り分け、新しい PDF を作ります。',
+    dropMain: 'PDF ファイルをここにドロップ', dropSub: 'またはクリックして選択',
+    loadingOpen: 'ファイルを開いています…', loadingPages: 'ページ情報を読み込み中… {i} / {n}',
+    f1t: '画質そのまま', f1p: '画像を再圧縮せず表示範囲だけを切り取るので、元の画質と OCR テキストが保たれます。',
+    f2t: 'ファイルは PC の中だけ', f2p: 'すべての処理はブラウザ内で完結し、サーバーには送られません。',
+    f3t: 'ページごとに調整', f3p: '分割線をドラッグで動かしたり、自動調整でのどを見つけたりできます。',
+    change: '変更', changeTitle: '別のファイルを開く',
+    dir: '読む順序', ltr: '左 → 右', rtl: '右 → 左', dirHint: '縦書きの本やマンガは右ページが先です。',
+    pos: '分割線の位置', auto: '自動調整', autoBusy: '検出中 {done}/{total} · 停止', clear: 'ページ別の調整を消す', clearN: 'ページ別の調整を消す ({n})',
+    posHint: 'プレビューの赤い線をドラッグすると、そのページだけ動きます。',
+    overlap: '中央の重なり', overlapHint: '<b>+</b> のど付近を両ページに少し含め、<b>−</b> 中央の影を切り落とします。',
+    bulk: '分割するページをまとめて選ぶ', bulkAuto: '横長のみ', bulkAll: 'すべて', bulkNone: '分割しない',
+    bulkHint: 'ふつうは <b>横長のみ</b> で合っています。縦長の表紙はそのままです。',
+    sumSrc: '元', sumOut: '結果', pagesUnit: ' ページ', build: 'PDF を作成',
+    preview: 'プレビュー', legendLine: '分割線', legendBand: '重なり', legendDbl: '線をダブルクリック = 戻す',
+    modeSplit: '分割', modeWhole: 'そのまま', modeSkip: '除外', pageN: '{n} ページ', zoomN: '{n} ページを拡大', zoomTitle: '拡大表示', close: '閉じる',
+    prev: '← 前のページ', next: '次のページ →', skipMark: '結果に含めない', cutLabel: '分割線',
+    vTitle: '{i} / {n} ページ', vLine: '分割線 {p}', vCustom: 'このページのみ調整済み', vReset: '戻す',
+    vHint: '· 線をドラッグ、または <span class="kbd">Tab</span> のあと <span class="kbd">←</span><span class="kbd">→</span>',
+    vWhole: 'このページは分割せずそのまま入れます', vSkip: 'このページは結果に含めません',
+    meta: '{n} ページ · {size} · 見開き {s} ページ',
+    tBusy: 'PDF を作成中です。終わってからもう一度お試しください。', tPdfOnly: 'PDF ファイルのみ開けます。',
+    tNoPages: 'ページが 1 つもない PDF です。', tEncrypted: 'セキュリティ（暗号化）が設定された PDF は分割できません。パスワードを解除したコピーで開いてください。',
+    tPassword: 'パスワード付きの PDF は開けません。解除してから開いてください。', tReadFail: 'PDF を読めませんでした。ファイルが壊れていないか確認してください。',
+    tLibFail: '必要なライブラリを読み込めませんでした。インターネット接続を確認して再読み込みしてください。',
+    tCleared: 'すべてのページが共通の分割線に従います。', tNoSplit: '分割に設定されたページがありません。',
+    tFound: '{n} ページでのどを見つけました。プレビューで確認してください。', tNotFound: 'のどをはっきり見つけられませんでした。手動で調整してください。',
+    tBuildErr: 'PDF の作成中に問題が起きました: {msg}',
+    progRead: '元ファイルを読み込み中…', progCopy: 'ページをコピー中…', progSplit: 'ページを分割中… {i}/{n}', progSave: '保存中…', progDone: '完成！',
+    done: '完成しました。', doneInfo: '{n} ページ · {size} ', again: 'もう一度保存', view: '開く',
+    veil: 'ここにドロップするとこのファイルに切り替わります', producer: 'Spread Split (pdf-lib)',
+  },
+};
+const LANG_KEY = 'spreadSplit.lang';
+let LANG = 'ko';
+const t = (key, vars) => {
+  let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.ko[key] ?? key;
+  if (vars) for (const k in vars) s = s.replaceAll('{' + k + '}', vars[k]);
+  return s;
+};
+function detectLang() {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (I18N[saved]) return saved;
+  for (const l of navigator.languages || [navigator.language || 'en']) {
+    const p = l.toLowerCase().slice(0, 2);
+    if (I18N[p]) return p;
+  }
+  return 'en';
+}
+function applyLang(lang) {
+  LANG = I18N[lang] ? lang : 'en';
+  document.documentElement.lang = LANG;
+  document.title = t('docTitle');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+  document.getElementById('lang').value = LANG;
+  document.getElementById('guideLink').href = 'guide.html#' + LANG;
+}
 
 const $ = (s, r = document) => r.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -428,9 +616,15 @@ const fmtSize = b => b < 1024 * 1024 ? (b / 1024).toFixed(0) + 'KB' : (b / 1024 
 const LANDSCAPE = 1.1;          // 가로/세로 비율이 이보다 크면 펼침면으로 봄
 const POS_MIN = 0.1, POS_MAX = 0.9;
 
+applyLang(detectLang());
+document.getElementById('lang').addEventListener('change', e => {
+  localStorage.setItem(LANG_KEY, e.target.value);
+  applyLang(e.target.value);
+  refresh();
+});
+
 if (!window.pdfjsLib || !window.PDFLib) {
-  document.addEventListener('DOMContentLoaded', () => {});
-  alert('필요한 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 새로고침해 주세요.');
+  alert(t('tLibFail'));
   return;
 }
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -447,7 +641,7 @@ const el = {
   loading: $('#loading'), loadingText: $('#loadingText'), loadingBar: $('#loadingBar'),
   grid: $('#grid'), fName: $('#fName'), fMeta: $('#fMeta'),
   pos: $('#pos'), posOut: $('#posOut'), overlap: $('#overlap'), ovOut: $('#ovOut'),
-  btnAuto: $('#btnAuto'), btnClear: $('#btnClear'), btnBuild: $('#btnBuild'), btnOther: $('#btnOther'),
+  btnAuto: $('#btnAuto'), btnClear: $('#btnClear'), btnBuild: $('#btnBuild'), btnBuildLabel: $('#btnBuildLabel'), btnOther: $('#btnOther'),
   sumIn: $('#sumIn'), sumOut: $('#sumOut'), buildBarWrap: $('#buildBarWrap'), buildBar: $('#buildBar'), done: $('#done'),
   viewer: $('#viewer'), vThumb: $('#vThumb'), vTitle: $('#vTitle'), vInfo: $('#vInfo'), vSeg: $('#vSeg'),
   toast: $('#toast'), veil: $('#veil'),
@@ -467,27 +661,27 @@ const halves = (s, g) => ({ left: [0, clamp(s + g, 0, 1)], right: [clamp(s - g, 
 /* ───────── open file ───────── */
 async function openFile(file) {
   if (!file) return;
-  if (S.busy) { toast('PDF를 만드는 중이에요. 끝난 뒤에 다시 시도해 주세요.'); return; }
-  if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { toast('PDF 파일만 열 수 있어요.'); return; }
+  if (S.busy) { toast(t('tBusy')); return; }
+  if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { toast(t('tPdfOnly')); return; }
 
   const gen = ++S.gen;
   S.detecting = false;
   el.loading.hidden = false;
-  el.loadingText.textContent = '파일 여는 중…';
+  el.loadingText.textContent = t('loadingOpen');
   el.loadingBar.style.width = '0%';
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const doc = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
     if (doc.numPages === 0) {
       doc.destroy();
-      toast('쪽이 하나도 없는 PDF예요.');
+      toast(t('tNoPages'));
       return;
     }
     // 권한 암호만 걸린 PDF는 열리긴 하지만 내용 스트림이 암호화되어 있어 그대로 복사하면 깨진 파일이 나온다
     const info = (await doc.getMetadata().catch(() => ({}))).info || {};
     if (info.EncryptFilterName) {
       doc.destroy();
-      toast('보안 설정(암호)이 걸린 PDF는 나눌 수 없어요. 암호를 해제한 사본으로 다시 열어 주세요.', 5000);
+      toast(t('tEncrypted'), 5000);
       return;
     }
     const pages = [];
@@ -496,7 +690,7 @@ async function openFile(file) {
       const vp = pg.getViewport({ scale: 1 });
       pages.push({ w: vp.width, h: vp.height, mode: vp.width / vp.height > LANDSCAPE ? 'split' : 'whole', pos: null });
       if (i % 20 === 0) {
-        el.loadingText.textContent = `쪽 정보 읽는 중… ${i} / ${doc.numPages}`;
+        el.loadingText.textContent = t('loadingPages', { i, n: doc.numPages });
         el.loadingBar.style.width = (i / doc.numPages * 100) + '%';
       }
     }
@@ -506,10 +700,7 @@ async function openFile(file) {
     showWorkspace();
   } catch (err) {
     console.error(err);
-    const msg = err && err.name === 'PasswordException'
-      ? '암호가 걸린 PDF는 열 수 없어요. 암호를 푼 뒤 다시 열어 주세요.'
-      : 'PDF를 읽지 못했어요. 파일이 손상되지 않았는지 확인해 주세요.';
-    toast(msg, 4000);
+    toast(err && err.name === 'PasswordException' ? t('tPassword') : t('tReadFail'), 4000);
   } finally {
     if (gen === S.gen) el.loading.hidden = true;
   }
@@ -519,8 +710,6 @@ function showWorkspace() {
   el.empty.hidden = true;
   el.workspace.hidden = false;
   el.fName.textContent = S.name;
-  const nSplit = S.pages.filter(p => p.mode === 'split').length;
-  el.fMeta.textContent = `${S.pages.length}쪽 · ${fmtSize(S.size)} · 펼침면 ${nSplit}쪽`;
   el.done.hidden = true;
   if (S.outUrl) { URL.revokeObjectURL(S.outUrl); S.outUrl = null; }
   buildGrid();
@@ -533,10 +722,10 @@ function ensureOverlay(thumb) {
   if (thumb._ov) return thumb._ov;
   const band = document.createElement('div'); band.className = 'band';
   const cut = document.createElement('div'); cut.className = 'cut'; cut.tabIndex = 0;
-  cut.setAttribute('role', 'slider'); cut.setAttribute('aria-label', '분할선');
+  cut.setAttribute('role', 'slider');
   const tagA = document.createElement('div'); tagA.className = 'tag';
   const tagB = document.createElement('div'); tagB.className = 'tag';
-  const skip = document.createElement('div'); skip.className = 'skip-mark'; skip.textContent = '결과에서 빠짐';
+  const skip = document.createElement('div'); skip.className = 'skip-mark';
   thumb.append(band, cut, tagA, tagB, skip);
   return (thumb._ov = { band, cut, tagA, tagB, skip });
 }
@@ -547,7 +736,9 @@ function paintOverlay(thumb, p, nums) {
   const split = p.mode === 'split';
   const s = effPos(p), g = S.overlap;
   ov.cut.hidden = ov.band.hidden = !split;
+  ov.cut.setAttribute('aria-label', t('cutLabel'));
   ov.skip.hidden = p.mode !== 'skip';
+  ov.skip.textContent = t('skipMark');
   ov.tagA.hidden = p.mode === 'skip';
   ov.tagB.hidden = !split;
   if (split) {
@@ -623,18 +814,20 @@ function buildGrid() {
     card.innerHTML = `
       <div class="stage"><div class="thumb"><canvas></canvas></div></div>
       <div class="card-foot">
-        <div class="pno">${i + 1}쪽<em></em></div>
+        <div class="pno"><span></span><em></em></div>
         <div class="seg">
-          <button data-mode="split">나누기</button>
-          <button data-mode="whole">통째로</button>
-          <button data-mode="skip">빼기</button>
+          <button data-mode="split"></button>
+          <button data-mode="whole"></button>
+          <button data-mode="skip"></button>
         </div>
-        <button class="icon-btn" data-zoom aria-label="${i + 1}쪽 크게 보기" title="크게 보기">${ICON_ZOOM}</button>
+        <button class="icon-btn" data-zoom>${ICON_ZOOM}</button>
       </div>`;
     const thumb = card.querySelector('.thumb');
     card._thumb = thumb;
+    card._pno = card.querySelector('.pno span');
     card._badge = card.querySelector('.pno em');
     card._segBtns = card.querySelectorAll('.seg button');
+    card._zoom = card.querySelector('[data-zoom]');
     bindCut(thumb, () => i);
     thumb.addEventListener('dblclick', e => { if (!e.target.closest('.cut')) openViewer(i); });
     frag.appendChild(card);
@@ -699,7 +892,10 @@ function numbering() {
   });
 }
 
+const MODE_KEYS = { split: 'modeSplit', whole: 'modeWhole', skip: 'modeSkip' };
+
 function refresh() {
+  if (el.workspace.hidden) return;
   const nums = numbering();
   const total = nums.reduce((a, x) => a + x.length, 0);
   let overrides = 0;
@@ -708,15 +904,21 @@ function refresh() {
     if (!card) return;
     card.className = 'card mode-' + p.mode;
     paintOverlay(card._thumb, p, nums[i]);
-    card._segBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === p.mode));
+    card._pno.textContent = t('pageN', { n: i + 1 });
+    card._zoom.setAttribute('aria-label', t('zoomN', { n: i + 1 }));
+    card._zoom.title = t('zoomTitle');
+    card._segBtns.forEach(b => { b.setAttribute('aria-pressed', b.dataset.mode === p.mode); b.textContent = t(MODE_KEYS[b.dataset.mode]); });
     const custom = p.mode === 'split' && p.pos != null;
     card._badge.textContent = custom ? fmtPct(p.pos) : '';
     if (p.pos != null) overrides++;
   });
+  const nSplit = S.pages.filter(p => p.mode === 'split').length;
+  el.fMeta.textContent = t('meta', { n: S.pages.length, size: fmtSize(S.size), s: nSplit });
   el.sumIn.textContent = S.pages.length;
   el.sumOut.textContent = total;
   el.btnClear.disabled = overrides === 0;
-  el.btnClear.textContent = overrides ? `개별 조정 지우기 (${overrides})` : '개별 조정 지우기';
+  el.btnClear.textContent = overrides ? t('clearN', { n: overrides }) : t('clear');
+  if (!S.detecting) el.btnAuto.textContent = t('auto');
   el.posOut.textContent = fmtPct(S.pos);
   el.ovOut.textContent = (S.overlap > 0 ? '+' : S.overlap < 0 ? '−' : '') + Math.abs(S.overlap * 100).toFixed(1) + '%';
   el.btnBuild.disabled = total === 0 || S.busy;
@@ -751,20 +953,20 @@ $('#bulkSeg').addEventListener('click', e => {
   });
   refresh();
 });
-el.btnClear.addEventListener('click', () => { S.pages.forEach(p => p.pos = null); refresh(); toast('모든 쪽이 기본 분할선을 따라가요.'); });
+el.btnClear.addEventListener('click', () => { S.pages.forEach(p => p.pos = null); refresh(); toast(t('tCleared')); });
 el.btnOther.addEventListener('click', () => el.file.click());
 
 /* ───────── auto detect gutter ───────── */
 el.btnAuto.addEventListener('click', async () => {
   if (S.detecting) { S.detecting = false; return; }
   const targets = S.pages.map((p, i) => i).filter(i => S.pages[i].mode === 'split');
-  if (!targets.length) { toast('나누기로 표시된 쪽이 없어요.'); return; }
+  if (!targets.length) { toast(t('tNoSplit')); return; }
   S.detecting = true;
   const gen = S.gen;
   let found = 0, done = 0;
   for (const i of targets) {
     if (!S.detecting || gen !== S.gen) break;
-    el.btnAuto.textContent = `찾는 중 ${done}/${targets.length} · 멈추기`;
+    el.btnAuto.textContent = t('autoBusy', { done, total: targets.length });
     try {
       const f = await detectGutter(i);
       if (gen !== S.gen) break;
@@ -774,10 +976,10 @@ el.btnAuto.addEventListener('click', async () => {
     if (done % 4 === 0) refresh();
   }
   S.detecting = false;
-  el.btnAuto.textContent = '자동 맞춤';
+  el.btnAuto.textContent = t('auto');
   if (gen !== S.gen) return;
   refresh();
-  toast(found ? `${found}쪽의 제본선을 찾았어요. 미리보기에서 확인해 주세요.` : '제본선을 뚜렷하게 찾지 못했어요. 직접 조정해 주세요.', 3600);
+  toast(found ? t('tFound', { n: found }) : t('tNotFound'), 3600);
 });
 
 async function detectGutter(i) {
@@ -943,20 +1145,19 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 
 async function build() {
   if (S.busy) return;
-  const { PDFDocument, PDFPage, PDFName } = PDFLib;
+  const { PDFDocument, PDFPage } = PDFLib;
   S.busy = true;
   el.btnBuild.disabled = true;
   el.done.hidden = true;
   el.buildBarWrap.hidden = false;
-  const setProg = (f, label) => { el.buildBar.style.width = (f * 100) + '%'; if (label) el.btnBuild.lastChild.textContent = ' ' + label; };
-  const origLabel = el.btnBuild.lastChild.textContent;
+  const setProg = (f, label) => { el.buildBar.style.width = (f * 100) + '%'; if (label) el.btnBuildLabel.textContent = label; };
   try {
-    setProg(0.03, '원본 읽는 중…'); await tick();
+    setProg(0.03, t('progRead')); await tick();
     const src = await PDFDocument.load(S.bytes, { ignoreEncryption: true, updateMetadata: false });
     const out = await PDFDocument.create();
     const keep = S.pages.map((p, i) => i).filter(i => S.pages[i].mode !== 'skip');
 
-    setProg(0.2, '쪽 복사하는 중…'); await tick();
+    setProg(0.2, t('progCopy')); await tick();
     const copied = await out.copyPages(src, keep);
 
     for (let k = 0; k < keep.length; k++) {
@@ -980,18 +1181,18 @@ async function build() {
       out.addPage(page);
       out.addPage(page2);
 
-      if (k % 25 === 0) { setProg(0.2 + 0.5 * (k / keep.length), `쪽 나누는 중… ${k + 1}/${keep.length}`); await tick(); }
+      if (k % 25 === 0) { setProg(0.2 + 0.5 * (k / keep.length), t('progSplit', { i: k + 1, n: keep.length })); await tick(); }
     }
 
     const title = src.getTitle();
     if (title) out.setTitle(title);
     const author = src.getAuthor();
     if (author) out.setAuthor(author);
-    out.setProducer('펼침면 나누기 (pdf-lib)');
+    out.setProducer(t('producer'));
 
-    setProg(0.75, '저장하는 중…'); await tick();
+    setProg(0.75, t('progSave')); await tick();
     const bytes = await out.save({ useObjectStreams: true });
-    setProg(1, '완성!');
+    setProg(1, t('progDone'));
 
     const blob = new Blob([bytes], { type: 'application/pdf' });
     if (S.outUrl) URL.revokeObjectURL(S.outUrl);
@@ -1002,18 +1203,18 @@ async function build() {
     document.body.appendChild(a); a.click(); a.remove();
 
     el.done.innerHTML = '';
-    const b = document.createElement('b'); b.textContent = '완성했어요. ';
-    const info = document.createTextNode(`${out.getPageCount()}쪽 · ${fmtSize(blob.size)} `);
-    const again = document.createElement('a'); again.href = S.outUrl; again.download = outName; again.textContent = '다시 받기';
-    const view = document.createElement('a'); view.href = S.outUrl; view.target = '_blank'; view.rel = 'noopener'; view.textContent = '열어 보기';
+    const b = document.createElement('b'); b.textContent = t('done');
+    const info = document.createTextNode(t('doneInfo', { n: out.getPageCount(), size: fmtSize(blob.size) }));
+    const again = document.createElement('a'); again.href = S.outUrl; again.download = outName; again.textContent = t('again');
+    const view = document.createElement('a'); view.href = S.outUrl; view.target = '_blank'; view.rel = 'noopener'; view.textContent = t('view');
     el.done.append(b, info, document.createElement('br'), again, document.createTextNode(' · '), view);
     el.done.hidden = false;
   } catch (err) {
     console.error(err);
-    toast('PDF를 만들다가 문제가 생겼어요: ' + (err.message || err), 5000);
+    toast(t('tBuildErr', { msg: err.message || err }), 5000);
   } finally {
     S.busy = false;
-    el.btnBuild.lastChild.textContent = origLabel;
+    el.btnBuildLabel.textContent = t('build');
     el.btnBuild.disabled = false;
     setTimeout(() => { el.buildBarWrap.hidden = true; el.buildBar.style.width = '0%'; }, 700);
   }
@@ -1040,27 +1241,27 @@ function paintViewer() {
   const p = S.pages[vIndex];
   const nums = numbering()[vIndex];
   paintOverlay(el.vThumb, p, nums);
-  el.vTitle.textContent = `${vIndex + 1}쪽 / ${S.pages.length}쪽`;
+  el.vTitle.textContent = t('vTitle', { i: vIndex + 1, n: S.pages.length });
   el.vSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === p.mode));
   el.vInfo.innerHTML = '';
   if (p.mode === 'split') {
-    const t = document.createElement('span');
-    t.textContent = `분할선 ${fmtPct(effPos(p))}`;
-    el.vInfo.append(t);
+    const tx = document.createElement('span');
+    tx.textContent = t('vLine', { p: fmtPct(effPos(p)) });
+    el.vInfo.append(tx);
     if (p.pos != null) {
-      const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = '이 쪽만 조정됨';
-      const reset = document.createElement('button'); reset.className = 'btn ghost'; reset.textContent = '되돌리기';
+      const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = t('vCustom');
+      const reset = document.createElement('button'); reset.className = 'btn ghost'; reset.textContent = t('vReset');
       reset.onclick = () => setPagePos(vIndex, null);
       el.vInfo.append(pill, reset);
     } else {
       const k = document.createElement('span'); k.style.color = 'var(--muted)';
-      k.innerHTML = '· 선을 끌거나 <span class="kbd">Tab</span> 후 <span class="kbd">←</span><span class="kbd">→</span>';
+      k.innerHTML = t('vHint');
       el.vInfo.append(k);
     }
   } else {
-    const t = document.createElement('span');
-    t.textContent = p.mode === 'whole' ? '이 쪽은 나누지 않고 그대로 넣어요' : '이 쪽은 결과에 넣지 않아요';
-    el.vInfo.append(t);
+    const tx = document.createElement('span');
+    tx.textContent = p.mode === 'whole' ? t('vWhole') : t('vSkip');
+    el.vInfo.append(tx);
   }
   $('#vPrev').disabled = vIndex === 0;
   $('#vNext').disabled = vIndex === S.pages.length - 1;
@@ -1105,11 +1306,11 @@ window.addEventListener('drop', e => {
   e.preventDefault(); dragDepth = 0;
   el.drop.classList.remove('over'); el.veil.hidden = true;
   const f = [...e.dataTransfer.files].find(f => /\.pdf$/i.test(f.name) || f.type === 'application/pdf');
-  if (f) openFile(f); else toast('PDF 파일만 열 수 있어요.');
+  if (f) openFile(f); else toast(t('tPdfOnly'));
 });
 
 // 테스트·자동화용
-window.spreadSplit = { openFile, state: S };
+window.spreadSplit = { openFile, state: S, setLang: applyLang, t };
 })();
 </script>
 </body>

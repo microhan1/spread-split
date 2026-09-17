@@ -18,6 +18,7 @@ Split two-page scanned PDF spreads into single pages — right in your browser, 
 - **가운데 겹침:** 제본선 부근을 양쪽 쪽에 모두 넣거나(+), 가운데 그림자를 잘라냅니다(−).
 - **읽기 방향:** 왼쪽→오른쪽, 오른쪽→왼쪽(세로쓰기 책·일본 만화).
 - 세로로 긴 표지는 자동으로 나누지 않고 그대로 두며, 쪽마다 나누기 / 통째로 / 빼기를 고를 수 있습니다.
+- **한국어 · English · 中文 · 日本語** 화면과 사용 설명을 지원합니다. 브라우저 언어에 맞춰 자동으로 고르고, 오른쪽 위에서 바꿀 수 있습니다.
 
 <img src="docs/images/screenshot.png" alt="펼침면 나누기 화면" width="720">
 
@@ -47,6 +48,7 @@ Spread Split takes a PDF scanned two pages per sheet and cuts every spread into 
 
 - Use it at https://microhan1.github.io/spread-split/ or open `index.html` locally.
 - Adjust the split line per page, auto-detect the gutter, add an overlap, and choose left-to-right or right-to-left order.
+- Interface and [user guide](https://microhan1.github.io/spread-split/guide.html#en) in Korean, English, Chinese (Simplified) and Japanese.
 
 ## 라이선스 / License
 

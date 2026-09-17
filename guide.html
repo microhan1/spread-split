@@ -8,59 +8,75 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root {
-  --bg: #f5f4f0; --surface: #ffffff; --surface-2: #efede7; --ink: #1d1d1b; --ink-2: #4a4944; --muted: #8a8880;
-  --line: #e4e1d9; --line-strong: #d2cec3; --primary: #1d1d1b; --primary-ink: #fff;
-  --accent: #e5484d; --accent-soft: rgba(229, 72, 77, .14); --paper: #ffffff; --text-line: #cfcbc1;
+  --bg: #faf8f4; --surface: #ffffff; --surface-2: #f3efe7; --ink: #23221f; --ink-2: #514e48; --muted: #8b877e;
+  --line: #e9e4da; --line-strong: #d8d2c5; --primary: #23221f; --primary-ink: #fff;
+  --accent: #e5484d; --accent-deep: #c73a3f; --accent-soft: #fdeceb; --accent-tint: #fff6f5;
+  --gold: #e8b64d; --gold-soft: #fff7e3; --paper: #ffffff; --text-line: #d9d3c6;
+  --shadow: 0 1px 2px rgba(60, 50, 30, .04), 0 10px 30px rgba(60, 50, 30, .07);
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #131312; --surface: #1c1c1a; --surface-2: #252522; --ink: #ededea; --ink-2: #c4c2ba; --muted: #8f8d86;
-    --line: #2f2e2b; --line-strong: #403f3a; --primary: #ededea; --primary-ink: #151514;
-    --accent: #ff6369; --accent-soft: rgba(255, 99, 105, .18); --paper: #2a2a27; --text-line: #4a4843;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #131312; --surface: #1c1c1a; --surface-2: #252522; --ink: #ededea; --ink-2: #c4c2ba; --muted: #8f8d86;
-  --line: #2f2e2b; --line-strong: #403f3a; --primary: #ededea; --primary-ink: #151514;
-  --accent: #ff6369; --accent-soft: rgba(255, 99, 105, .18); --paper: #2a2a27; --text-line: #4a4843;
-  color-scheme: dark;
-}
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 16px/1.75 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
   -webkit-font-smoothing: antialiased; word-break: keep-all;
 }
+html[lang="ja"] body { font-family: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; word-break: normal; }
+html[lang="zh"] body { font-family: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; word-break: normal; }
+html[lang="en"] body { word-break: normal; }
 a { color: inherit; }
+button, select { font: inherit; color: inherit; }
+
+/* top bar */
 .topbar {
-  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 14px 24px;
-  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 14px 24px;
+  background: rgba(250, 248, 244, .86); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
-.brand svg { width: 26px; height: 26px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.brand svg { width: 26px; height: 26px; flex: none; }
 .brand small { font-weight: 500; color: var(--muted); }
 .spacer { flex: 1; }
+.lang {
+  appearance: none; -webkit-appearance: none; padding: 7px 30px 7px 12px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b877e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: var(--ink-2); font-size: 14px; cursor: pointer;
+}
+.lang:hover { border-color: var(--line-strong); color: var(--ink); }
 .btn {
   display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; text-decoration: none;
-  font-size: 14px; font-weight: 600; background: var(--primary); color: var(--primary-ink);
+  font-size: 14px; font-weight: 600; background: var(--accent); color: #fff; white-space: nowrap; box-shadow: 0 4px 14px rgba(229, 72, 77, .28);
 }
-.btn:hover { opacity: .9; }
+.btn:hover { background: var(--accent-deep); }
 
-.layout { display: grid; grid-template-columns: 210px minmax(0, 720px); gap: 56px; justify-content: center; padding: 48px 24px 96px; }
+/* hero band */
+.hero-band {
+  background: linear-gradient(135deg, #fff1ee 0%, #fff8ea 55%, #f2f7f3 100%);
+  border-bottom: 1px solid var(--line);
+}
+.hero-inner { max-width: 1010px; margin: 0 auto; padding: 56px 24px 44px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; }
+.hero-inner h1 { font-size: clamp(30px, 4.4vw, 42px); line-height: 1.22; letter-spacing: -.03em; margin: 0 0 14px; }
+.hero-inner h1 em { font-style: normal; color: var(--accent); }
+.hero-inner .lead { font-size: 17px; color: var(--ink-2); margin: 0 0 22px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 13px; font-weight: 600; padding: 5px 11px; border-radius: 99px; background: rgba(255,255,255,.75); border: 1px solid var(--line); color: var(--ink-2); }
+.chip::before { content: "✓ "; color: var(--accent); }
+.hero-art { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px 20px 14px; box-shadow: var(--shadow); }
+.hero-art svg { display: block; width: 100%; height: auto; }
+.hero-art figcaption { text-align: center; color: var(--muted); font-size: 13.5px; margin-top: 8px; }
+
+/* layout */
+.layout { display: grid; grid-template-columns: 200px minmax(0, 760px); gap: 56px; justify-content: center; padding: 44px 24px 96px; }
 .toc { position: sticky; top: 96px; align-self: start; font-size: 14px; }
-.toc b { display: block; font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.toc b { display: block; font-size: 12px; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
 .toc a { display: block; padding: 5px 0 5px 12px; border-left: 2px solid var(--line); color: var(--ink-2); text-decoration: none; }
-.toc a:hover { color: var(--ink); border-color: var(--ink-2); }
+.toc a:hover { color: var(--accent); border-color: var(--accent); }
 
-article h1 { font-size: clamp(30px, 4.4vw, 40px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 14px; }
-article .lead { font-size: 18px; color: var(--ink-2); margin: 0 0 36px; }
-article h2 { font-size: 24px; letter-spacing: -.02em; line-height: 1.35; margin: 64px 0 14px; display: flex; align-items: center; gap: 12px; }
+article h2 { font-size: 24px; letter-spacing: -.02em; line-height: 1.35; margin: 60px 0 14px; display: flex; align-items: center; gap: 12px; }
+article h2:first-of-type { margin-top: 0; }
 article h2 .n {
-  flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
-  background: var(--primary); color: var(--primary-ink); font-size: 15px;
+  flex: none; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent-deep); font-size: 15px; font-weight: 800;
 }
 article h3 { font-size: 17px; margin: 28px 0 6px; }
 article p { margin: 0 0 14px; }
@@ -68,43 +84,28 @@ article ul, article ol { padding-left: 22px; margin: 0 0 14px; }
 article li { margin: 4px 0; }
 .muted { color: var(--muted); }
 
-.hero {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 28px 20px 20px; margin-bottom: 20px;
-}
-.hero svg { display: block; width: 100%; height: auto; }
-.hero figcaption { text-align: center; color: var(--muted); font-size: 14px; margin-top: 10px; }
-
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 8px; padding: 0; list-style: none; counter-reset: s; }
-.steps li { margin: 0; padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); counter-increment: s; font-size: 14.5px; line-height: 1.55; }
-.steps li::before { content: counter(s); display: block; font-weight: 800; color: var(--accent); font-size: 13px; margin-bottom: 2px; }
+.steps li { margin: 0; padding: 18px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); counter-increment: s; font-size: 14.5px; line-height: 1.55; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; margin-bottom: 8px; }
 .steps li b { display: block; font-size: 16px; margin-bottom: 2px; }
 
-.ui {
-  display: inline-block; padding: 0 7px; border-radius: 6px; font-size: .9em; font-weight: 600; line-height: 1.7;
-  background: var(--surface); border: 1px solid var(--line-strong); white-space: nowrap;
-}
+.ui { display: inline-block; padding: 0 7px; border-radius: 6px; font-size: .9em; font-weight: 600; line-height: 1.7; background: var(--surface); border: 1px solid var(--line-strong); white-space: nowrap; }
 code { font: 500 .88em/1 ui-monospace, Consolas, monospace; padding: 2px 5px; border-radius: 5px; background: var(--surface-2); word-break: break-all; }
-kbd {
-  font: 600 12.5px/1 ui-monospace, Consolas, monospace; padding: 3px 7px; border-radius: 6px;
-  border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); white-space: nowrap;
-}
-.note {
-  padding: 14px 16px; border-radius: 12px; margin: 18px 0; font-size: 15px;
-  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
-}
-.note b { color: var(--ink); }
+kbd { font: 600 12.5px/1 ui-monospace, Consolas, monospace; padding: 3px 7px; border-radius: 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); white-space: nowrap; }
+.note { padding: 14px 16px; border-radius: 12px; margin: 18px 0; font-size: 15px; background: var(--accent-tint); border: 1px solid #f7d5d3; border-left: 4px solid var(--accent); }
+.note.tip { background: var(--gold-soft); border-color: #f2dfae; border-left-color: var(--gold); }
 
 .options { display: grid; gap: 10px; margin: 16px 0; }
-.option { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.option { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: start; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
 .option .ui { justify-self: start; }
 .option p { margin: 0; font-size: 15px; }
 
 .figure { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
-.figure figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 14px 10px; }
+.figure figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 14px 10px; box-shadow: var(--shadow); }
 .figure svg { display: block; width: 100%; height: auto; }
 .figure figcaption { font-size: 13.5px; color: var(--ink-2); text-align: center; margin-top: 8px; line-height: 1.5; }
 
-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-size: 13px; color: var(--muted); font-weight: 600; background: var(--surface-2); }
 tr:last-child td { border-bottom: 0; }
@@ -113,21 +114,27 @@ td:first-child { white-space: nowrap; }
 details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 8px 0; }
 summary { cursor: pointer; padding: 13px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 20px; line-height: 1; }
+summary::after { content: "+"; color: var(--accent); font-weight: 400; font-size: 20px; line-height: 1; }
 details[open] summary::after { content: "−"; }
 details > div { padding: 0 16px 14px; color: var(--ink-2); font-size: 15px; }
 details > div p:last-child { margin-bottom: 0; }
 
 footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 40px; }
+article.doc { display: none; }
+article.doc.active { display: block; }
+.docwrap { min-width: 0; }
 
 @media (max-width: 900px) {
-  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 32px 16px 72px; }
+  .hero-inner { grid-template-columns: 1fr; padding: 36px 16px 28px; gap: 22px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 28px 16px 72px; }
   .toc { display: none; }
   .steps { grid-template-columns: 1fr; }
   .figure { grid-template-columns: 1fr; }
   .option { grid-template-columns: 1fr; gap: 6px; }
-  .topbar { padding: 12px 16px; }
+  .topbar { padding: 12px 14px; gap: 8px; }
   .brand small { display: none; }
+  .topbar .btn { padding: 7px 10px; font-size: 13px; }
+  .lang { padding: 6px 26px 6px 9px; font-size: 13px; background-position: right 8px center; }
   td:first-child { white-space: normal; }
 }
 </style>
@@ -137,72 +144,68 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16
 <header class="topbar">
   <a class="brand" href="index.html">
     <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="17" y="7" width="12" height="18" rx="2" fill="currentColor"/><rect x="15.25" y="3" width="1.5" height="26" rx=".75" fill="var(--accent)"/></svg>
-    펼침면 나누기 <small>사용 설명</small>
+    <span id="brandName">펼침면 나누기</span> <small id="brandSub">사용 설명</small>
   </a>
   <div class="spacer"></div>
-  <a class="btn" href="index.html">도구 열기 →</a>
+  <select class="lang" id="lang" aria-label="Language">
+    <option value="ko">한국어</option>
+    <option value="en">English</option>
+    <option value="zh">中文</option>
+    <option value="ja">日本語</option>
+  </select>
+  <a class="btn" id="openTool" href="index.html">도구 열기 →</a>
 </header>
+
+<!-- ═══════════════════════════ 한국어 ═══════════════════════════ -->
+<article class="doc" data-lang="ko">
+<section class="hero-band"><div class="hero-inner">
+  <div>
+    <h1>펼쳐서 스캔한 PDF,<br><em>한 쪽씩</em> 나눠서 읽으세요</h1>
+    <p class="lead">한 장에 두 쪽이 담긴 스캔본을 왼쪽·오른쪽으로 잘라, 태블릿과 이북리더에서 한 쪽씩 넘겨 볼 수 있는 PDF로 만들어요.</p>
+    <div class="chips"><span class="chip">설치 없음</span><span class="chip">파일은 내 컴퓨터에만</span><span class="chip">화질 그대로</span><span class="chip">쪽마다 조정</span></div>
+  </div>
+  <figure class="hero-art">
+    <svg viewBox="0 0 640 210" role="img" aria-label="두 쪽이 한 장에 있는 스캔이 두 장의 쪽으로 나뉘는 그림">
+      <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/><path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/></g>
+      <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">분할선</text>
+      <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M296 110h52M338 100l10 10-10 10"/></g>
+      <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
+      <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
+      <circle cx="435" cy="176" r="10" fill="var(--accent)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+      <circle cx="565" cy="176" r="10" fill="var(--accent)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+    </svg>
+    <figcaption>스캔 한 장 → 쪽 두 장</figcaption>
+  </figure>
+</div></section>
 
 <div class="layout">
   <nav class="toc" aria-label="목차">
     <b>목차</b>
-    <a href="#start">시작하기</a>
-    <a href="#open">1. 파일 열기</a>
-    <a href="#check">2. 나눌 쪽 확인</a>
-    <a href="#line">3. 분할선 맞추기</a>
-    <a href="#overlap">4. 가운데 겹침</a>
-    <a href="#dir">5. 읽기 방향</a>
-    <a href="#save">6. PDF 만들기</a>
-    <a href="#keys">단축키</a>
-    <a href="#faq">자주 묻는 질문</a>
+    <a href="#ko-start">시작하기</a><a href="#ko-open">1. 파일 열기</a><a href="#ko-check">2. 나눌 쪽 확인</a><a href="#ko-line">3. 분할선 맞추기</a><a href="#ko-overlap">4. 가운데 겹침</a><a href="#ko-dir">5. 읽기 방향</a><a href="#ko-save">6. PDF 만들기</a><a href="#ko-keys">단축키</a><a href="#ko-faq">자주 묻는 질문</a>
   </nav>
-
-  <article>
-    <h1 id="start">펼침면 나누기 사용 설명</h1>
-    <p class="lead">책을 펼쳐서 스캔하면 한 장에 두 쪽이 들어가요. 이 도구는 그런 PDF를 왼쪽 쪽과 오른쪽 쪽으로 나눠서 한 쪽씩 넘겨 볼 수 있는 새 PDF로 만들어요.</p>
-
-    <figure class="hero">
-      <svg viewBox="0 0 640 210" role="img" aria-label="두 쪽이 한 장에 있는 스캔이 두 장의 쪽으로 나뉘는 그림">
-        <g>
-          <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
-          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round">
-            <path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/>
-            <path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/>
-          </g>
-          <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
-          <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">분할선</text>
-        </g>
-        <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M296 110h52M338 100l10 10-10 10"/>
-        </g>
-        <g>
-          <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
-          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
-          <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
-          <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
-          <circle cx="435" cy="176" r="10" fill="var(--primary)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="var(--primary-ink)">1</text>
-          <circle cx="565" cy="176" r="10" fill="var(--primary)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="var(--primary-ink)">2</text>
-        </g>
-      </svg>
-      <figcaption>스캔 한 장 → 쪽 두 장</figcaption>
-    </figure>
-
+  <div class="docwrap">
+    <h2 id="ko-start"><span class="n">★</span>시작하기</h2>
     <ol class="steps">
-      <li><b>PDF 끌어다 놓기</b><code>index.html</code>을 브라우저로 열고 스캔 PDF를 올려요.</li>
+      <li><b>PDF 끌어다 놓기</b>도구 화면을 열고 스캔 PDF를 화면에 올려요.</li>
       <li><b>미리보기 확인</b>빨간 분할선이 책 가운데에 맞는지 봐요.</li>
       <li><b>PDF 만들기</b>버튼을 누르면 <code>원래이름_split.pdf</code>로 저장돼요.</li>
     </ol>
     <p class="muted">대부분은 이 세 단계로 끝나요. 아래는 결과가 마음에 들지 않을 때 쓰는 기능들이에요.</p>
 
-    <h2 id="open"><span class="n">1</span>파일 열기</h2>
-    <p><code>index.html</code>을 더블클릭해서 크롬, 엣지, 웨일 같은 브라우저로 열어요. 설치할 건 없어요.</p>
+    <h2 id="ko-open"><span class="n">1</span>파일 열기</h2>
+    <p>크롬, 엣지, 웨일 같은 브라우저로 도구를 열어요. 설치할 건 없고 스마트폰에서도 돼요.</p>
     <ul>
       <li>PDF 파일을 화면에 <b>끌어다 놓거나</b>, 가운데 상자를 눌러 파일을 골라요.</li>
       <li>작업 중에 다른 PDF를 끌어다 놓거나 왼쪽 위 <span class="ui">바꾸기</span>를 누르면 파일이 바뀌어요.</li>
+      <li>화면 언어는 오른쪽 위에서 한국어·English·中文·日本語 중에 고를 수 있어요.</li>
     </ul>
     <div class="note"><b>파일은 업로드되지 않아요.</b> 모든 처리는 내 컴퓨터의 브라우저 안에서 해요. 처음 열 때 PDF를 읽는 프로그램(pdf.js, pdf-lib)을 인터넷에서 받아오기 때문에 인터넷 연결만 있으면 돼요.</div>
 
-    <h2 id="check"><span class="n">2</span>나눌 쪽 확인하기</h2>
+    <h2 id="ko-check"><span class="n">2</span>나눌 쪽 확인하기</h2>
     <p>파일을 열면 쪽마다 미리보기 카드가 생겨요. 도구가 <b>가로로 긴 쪽은 펼침면</b>으로 보고 나누기로, <b>세로로 긴 쪽</b>(앞표지, 뒤표지 같은)은 통째로 설정해 둬요.</p>
     <p>카드 아래 버튼으로 쪽마다 바꿀 수 있어요.</p>
     <div class="options">
@@ -212,12 +215,10 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16
     </div>
     <p>여러 쪽을 한꺼번에 바꾸려면 왼쪽 설정의 <span class="ui">나눌 쪽 한꺼번에 고르기</span>에서 <span class="ui">가로 쪽만</span> · <span class="ui">모두</span> · <span class="ui">나누지 않음</span> 중에 골라요. 왼쪽 아래에 <b>원본 몇 쪽 → 결과 몇 쪽</b>이 바로 표시돼요.</p>
 
-    <h2 id="line"><span class="n">3</span>분할선 맞추기</h2>
+    <h2 id="ko-line"><span class="n">3</span>분할선 맞추기</h2>
     <p>스캔할 때 책이 한가운데 놓이지 않으면 제본선이 가운데에서 벗어나요. 그러면 한쪽 쪽의 글자가 옆 쪽으로 넘어가요. 세 가지 방법으로 맞출 수 있어요.</p>
-
     <h3>전체를 한꺼번에: 분할선 위치</h3>
     <p>왼쪽 설정의 <span class="ui">분할선 위치</span> 슬라이더를 움직이면 모든 쪽의 분할선이 같이 움직여요. 스캐너에 책을 늘 같은 자리에 놓았다면 이것만으로 충분해요.</p>
-
     <h3>쪽마다 따로: 빨간 선 끌기</h3>
     <p>미리보기에서 빨간 선에 마우스를 올리면 손잡이가 나타나요. 끌어서 옮기면 <b>그 쪽만</b> 따로 조정되고, 쪽 번호 아래에 조정한 위치(예: <span style="color:var(--accent);font-weight:600">52.3%</span>)가 표시돼요.</p>
     <ul>
@@ -225,97 +226,456 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16
       <li>따로 조정한 쪽이 있으면 <span class="ui">개별 조정 지우기</span> 버튼으로 한꺼번에 되돌릴 수 있어요.</li>
       <li>미리보기를 더블클릭하거나 돋보기 버튼을 누르면 <b>크게 보기</b> 창이 열려서 더 정확하게 맞출 수 있어요.</li>
     </ul>
-
     <h3>알아서 찾기: 자동 맞춤</h3>
     <p><span class="ui">자동 맞춤</span>을 누르면 나누기로 표시된 쪽마다 제본선을 찾아서 분할선을 옮겨요. 가운데의 <b>그림자</b>나 글자가 없는 <b>빈 여백</b>을 기준으로 찾아요. 쪽이 많으면 시간이 걸리고, 진행 중에 버튼을 한 번 더 누르면 멈춰요.</p>
-    <div class="note">자동 맞춤은 그림이 가운데까지 걸친 쪽이나 여백이 거의 없는 쪽에서 틀릴 수 있어요. 돌린 뒤에 미리보기를 한 번 훑어보고, 이상한 쪽만 손으로 고쳐 주세요.</div>
+    <div class="note tip">자동 맞춤은 그림이 가운데까지 걸친 쪽이나 여백이 거의 없는 쪽에서 틀릴 수 있어요. 돌린 뒤에 미리보기를 한 번 훑어보고, 이상한 쪽만 손으로 고쳐 주세요.</div>
 
-    <h2 id="overlap"><span class="n">4</span>가운데 겹침</h2>
+    <h2 id="ko-overlap"><span class="n">4</span>가운데 겹침</h2>
     <p>분할선 양옆을 얼마나 넣을지 정해요. 슬라이더를 가운데(0%)에 두면 분할선에서 딱 잘라요.</p>
     <div class="figure">
       <figure>
-        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 플러스로 하면 가운데 부분이 양쪽 쪽에 모두 들어감">
-          <rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/>
-          <rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/>
-          <g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g>
-          <path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/>
-          <g stroke="var(--ink-2)" stroke-width="1.5" fill="none"><path d="M10 146h134M116 142h134" stroke-dasharray="1 0"/></g>
-        </svg>
+        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 플러스로 하면 가운데 부분이 양쪽 쪽에 모두 들어감"><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h134M116 142h134"/></g></svg>
         <figcaption><b>+ (겹치기)</b> 제본선 근처가 양쪽 쪽에 모두 들어가요.<br>글자가 가운데까지 붙어 있을 때 잘리지 않아요.</figcaption>
       </figure>
       <figure>
-        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 마이너스로 하면 가운데 부분이 잘려 나감">
-          <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs>
-          <rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/>
-          <rect x="116" y="15" width="28" height="120" fill="url(#hatch)"/>
-          <g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g>
-          <path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/>
-          <g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g>
-        </svg>
+        <svg viewBox="0 0 260 150" role="img" aria-label="겹침을 마이너스로 하면 가운데 부분이 잘려 나감"><defs><pattern id="hatch-ko" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="url(#hatch-ko)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g></svg>
         <figcaption><b>− (잘라내기)</b> 가운데 띠를 버려요.<br>제본선의 검은 그림자를 없앨 때 좋아요.</figcaption>
       </figure>
     </div>
     <p>미리보기에서 겹치는 부분은 <span style="background:var(--accent-soft);padding:0 6px;border-radius:4px">옅은 빨강</span>으로, 잘려 나가는 부분은 빗금으로 보여요. 보통은 <b>+0.5% ~ +1%</b> 정도가 무난해요.</p>
 
-    <h2 id="dir"><span class="n">5</span>읽기 방향</h2>
+    <h2 id="ko-dir"><span class="n">5</span>읽기 방향</h2>
     <p>나눈 두 쪽 중 어느 쪽을 먼저 둘지 정해요.</p>
-    <table>
-      <thead><tr><th>설정</th><th>순서</th><th>이런 책에</th></tr></thead>
-      <tbody>
-        <tr><td><span class="ui">왼쪽 → 오른쪽</span></td><td>왼쪽 쪽, 그다음 오른쪽 쪽</td><td>한글·영어 가로쓰기 책 대부분</td></tr>
-        <tr><td><span class="ui">오른쪽 → 왼쪽</span></td><td>오른쪽 쪽, 그다음 왼쪽 쪽</td><td>세로쓰기 옛 책, 일본 만화·소설</td></tr>
-      </tbody>
-    </table>
+    <table><thead><tr><th>설정</th><th>순서</th><th>이런 책에</th></tr></thead><tbody>
+      <tr><td><span class="ui">왼쪽 → 오른쪽</span></td><td>왼쪽 쪽, 그다음 오른쪽 쪽</td><td>한글·영어 가로쓰기 책 대부분</td></tr>
+      <tr><td><span class="ui">오른쪽 → 왼쪽</span></td><td>오른쪽 쪽, 그다음 왼쪽 쪽</td><td>세로쓰기 옛 책, 일본 만화·소설</td></tr>
+    </tbody></table>
     <p>미리보기의 쪽 번호가 방향에 맞춰 바뀌니 눈으로 확인할 수 있어요.</p>
 
-    <h2 id="save"><span class="n">6</span>PDF 만들기</h2>
+    <h2 id="ko-save"><span class="n">6</span>PDF 만들기</h2>
     <p><span class="ui">PDF 만들기</span>를 누르면 진행 막대가 차오르고, 끝나면 <code>원래이름_split.pdf</code>가 브라우저의 다운로드 폴더에 저장돼요. 저장 뒤 나오는 <span class="ui">다시 받기</span>와 <span class="ui">열어 보기</span>로 결과를 바로 확인할 수 있어요.</p>
     <p>결과가 마음에 들지 않으면 설정을 고치고 다시 누르면 돼요. 원본 파일은 바뀌지 않아요.</p>
 
-    <h2 id="keys">단축키</h2>
-    <table>
-      <thead><tr><th>키</th><th>하는 일</th><th>어디서</th></tr></thead>
-      <tbody>
-        <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>이전 쪽 / 다음 쪽</td><td>크게 보기</td></tr>
-        <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>나누기 / 통째로 / 빼기</td><td>크게 보기</td></tr>
-        <tr><td><kbd>Tab</kbd>으로 선 선택 후 <kbd>←</kbd> <kbd>→</kbd></td><td>분할선을 0.2%씩 옮기기 (<kbd>Shift</kbd>를 같이 누르면 1%씩)</td><td>미리보기, 크게 보기</td></tr>
-        <tr><td>선 <kbd>더블클릭</kbd></td><td>이 쪽의 분할선을 전체 설정으로 되돌리기</td><td>미리보기, 크게 보기</td></tr>
-        <tr><td><kbd>Esc</kbd></td><td>크게 보기 닫기</td><td>크게 보기</td></tr>
-      </tbody>
-    </table>
+    <h2 id="ko-keys"><span class="n">⌨</span>단축키</h2>
+    <table><thead><tr><th>키</th><th>하는 일</th><th>어디서</th></tr></thead><tbody>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>이전 쪽 / 다음 쪽</td><td>크게 보기</td></tr>
+      <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>나누기 / 통째로 / 빼기</td><td>크게 보기</td></tr>
+      <tr><td><kbd>Tab</kbd>으로 선 선택 후 <kbd>←</kbd> <kbd>→</kbd></td><td>분할선을 0.2%씩 옮기기 (<kbd>Shift</kbd>를 같이 누르면 1%씩)</td><td>미리보기, 크게 보기</td></tr>
+      <tr><td>선 <kbd>더블클릭</kbd></td><td>이 쪽의 분할선을 전체 설정으로 되돌리기</td><td>미리보기, 크게 보기</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>크게 보기 닫기</td><td>크게 보기</td></tr>
+    </tbody></table>
 
-    <h2 id="faq">자주 묻는 질문</h2>
-    <details open>
-      <summary>나누면 화질이 떨어지나요?</summary>
-      <div><p>아니요. 스캔 이미지를 다시 그리거나 압축하지 않아요. 원래 쪽을 그대로 두고 <b>보이는 영역(페이지 상자)만</b> 절반으로 바꾸기 때문에 화질이 원본과 같아요. 같은 이미지를 두 쪽이 함께 쓰므로 파일 크기도 거의 늘지 않아요.</p></div>
-    </details>
-    <details>
-      <summary>OCR로 넣은 글자(검색되는 텍스트)도 남나요?</summary>
-      <div><p>네, 남아요. 다만 보이는 영역만 자르는 방식이라 글자 정보는 두 쪽에 모두 들어 있어요. 그래서 PDF 뷰어에서 검색하면 반대쪽 글자가 걸리거나, 텍스트를 추출하면 옆 쪽 글자가 섞일 수 있어요. 깔끔한 텍스트가 필요하면 나눈 PDF로 OCR을 다시 하는 게 좋아요.</p></div>
-    </details>
-    <details>
-      <summary>잘려 나간 부분이 다른 프로그램에서 다시 보이지 않나요?</summary>
-      <div><p>일반 뷰어와 전자책 리더(리디북스, Moon+ Reader, Boox 등), 인쇄에서는 보이지 않아요. 하지만 원본 이미지는 파일 안에 그대로 있어서 PDF 편집 프로그램으로 페이지 상자를 넓히면 다시 볼 수 있어요. 가려야 하는 내용이 있다면 이 도구로 숨기지 마세요.</p></div>
-    </details>
-    <details>
-      <summary>90도 돌아간 스캔도 되나요?</summary>
-      <div><p>네. PDF에 회전 정보가 들어 있는 경우 화면에 보이는 방향을 기준으로 나눠요. 이미지 자체가 옆으로 누운 채 저장된 경우(회전 정보 없이)는 먼저 다른 프로그램으로 쪽을 바로 세운 뒤 여세요.</p></div>
-    </details>
-    <details>
-      <summary>파일이 크면 어떻게 되나요?</summary>
-      <div><p>브라우저 메모리 안에서 처리하므로 수백 MB짜리 파일도 열 수 있지만 느려질 수 있어요. 미리보기는 화면에 보이는 쪽만 그리고, 자동 맞춤은 쪽 수에 비례해서 시간이 걸려요. 너무 무거우면 크롬이나 엣지에서 다른 탭을 닫고 시도해 보세요.</p></div>
-    </details>
-    <details>
-      <summary>암호가 걸린 PDF가 안 열려요.</summary>
-      <div><p>열기 암호가 있는 PDF는 열 수 없어요. 열기는 되지만 인쇄·편집만 제한한 PDF(권한 암호)도 내용이 암호화되어 있어서 나눌 수 없어요. 두 경우 모두 PDF 프로그램에서 암호를 해제한 사본을 만든 뒤 열어 주세요.</p></div>
-    </details>
-    <details>
-      <summary>"라이브러리를 불러오지 못했어요"라고 떠요.</summary>
-      <div><p>PDF를 읽는 프로그램을 인터넷에서 받아오지 못한 거예요. 인터넷 연결을 확인하고 새로고침해 주세요. 회사 방화벽이 <code>cdnjs.cloudflare.com</code>을 막고 있을 수도 있어요.</p></div>
-    </details>
-  </article>
+    <h2 id="ko-faq"><span class="n">?</span>자주 묻는 질문</h2>
+    <details open><summary>나누면 화질이 떨어지나요?</summary><div><p>아니요. 스캔 이미지를 다시 그리거나 압축하지 않아요. 원래 쪽을 그대로 두고 <b>보이는 영역(페이지 상자)만</b> 절반으로 바꾸기 때문에 화질이 원본과 같아요. 같은 이미지를 두 쪽이 함께 쓰므로 파일 크기도 거의 늘지 않아요.</p></div></details>
+    <details><summary>OCR로 넣은 글자(검색되는 텍스트)도 남나요?</summary><div><p>네, 남아요. 다만 보이는 영역만 자르는 방식이라 글자 정보는 두 쪽에 모두 들어 있어요. 그래서 PDF 뷰어에서 검색하면 반대쪽 글자가 걸리거나, 텍스트를 추출하면 옆 쪽 글자가 섞일 수 있어요. 깔끔한 텍스트가 필요하면 나눈 PDF로 OCR을 다시 하는 게 좋아요.</p></div></details>
+    <details><summary>잘려 나간 부분이 다른 프로그램에서 다시 보이지 않나요?</summary><div><p>일반 뷰어와 전자책 리더, 인쇄에서는 보이지 않아요. 하지만 원본 이미지는 파일 안에 그대로 있어서 PDF 편집 프로그램으로 페이지 상자를 넓히면 다시 볼 수 있어요. 가려야 하는 내용이 있다면 이 도구로 숨기지 마세요.</p></div></details>
+    <details><summary>90도 돌아간 스캔도 되나요?</summary><div><p>네. PDF에 회전 정보가 들어 있는 경우 화면에 보이는 방향을 기준으로 나눠요. 이미지 자체가 옆으로 누운 채 저장된 경우(회전 정보 없이)는 먼저 다른 프로그램으로 쪽을 바로 세운 뒤 여세요.</p></div></details>
+    <details><summary>파일이 크면 어떻게 되나요?</summary><div><p>브라우저 메모리 안에서 처리하므로 수백 MB짜리 파일도 열 수 있지만 느려질 수 있어요. 미리보기는 화면에 보이는 쪽만 그리고, 자동 맞춤은 쪽 수에 비례해서 시간이 걸려요. 너무 무거우면 다른 탭을 닫고 시도해 보세요.</p></div></details>
+    <details><summary>암호가 걸린 PDF가 안 열려요.</summary><div><p>열기 암호가 있는 PDF는 열 수 없어요. 열기는 되지만 인쇄·편집만 제한한 PDF(권한 암호)도 내용이 암호화되어 있어서 나눌 수 없어요. 두 경우 모두 PDF 프로그램에서 암호를 해제한 사본을 만든 뒤 열어 주세요.</p></div></details>
+    <details><summary>"라이브러리를 불러오지 못했어요"라고 떠요.</summary><div><p>PDF를 읽는 프로그램을 인터넷에서 받아오지 못한 거예요. 인터넷 연결을 확인하고 새로고침해 주세요. 회사 방화벽이 <code>cdnjs.cloudflare.com</code>을 막고 있을 수도 있어요.</p></div></details>
+  </div>
 </div>
+</article>
 
-<footer>펼침면 나누기 · 모든 처리는 브라우저 안에서 이루어집니다</footer>
+<!-- ═══════════════════════════ English ═══════════════════════════ -->
+<article class="doc" data-lang="en">
+<section class="hero-band"><div class="hero-inner">
+  <div>
+    <h1>Scanned book spreads,<br>read <em>one page at a time</em></h1>
+    <p class="lead">Spread Split cuts a PDF scanned two pages per sheet into left and right pages, so it reads naturally on tablets and e-readers.</p>
+    <div class="chips"><span class="chip">No install</span><span class="chip">Files stay on your computer</span><span class="chip">Original quality</span><span class="chip">Per-page control</span></div>
+  </div>
+  <figure class="hero-art">
+    <svg viewBox="0 0 640 210" role="img" aria-label="A scanned sheet with two pages becomes two single pages">
+      <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/><path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/></g>
+      <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">split line</text>
+      <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M296 110h52M338 100l10 10-10 10"/></g>
+      <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
+      <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
+      <circle cx="435" cy="176" r="10" fill="var(--accent)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+      <circle cx="565" cy="176" r="10" fill="var(--accent)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+    </svg>
+    <figcaption>One scanned sheet → two pages</figcaption>
+  </figure>
+</div></section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <b>Contents</b>
+    <a href="#en-start">Quick start</a><a href="#en-open">1. Open a file</a><a href="#en-check">2. Which pages to split</a><a href="#en-line">3. Set the split line</a><a href="#en-overlap">4. Center overlap</a><a href="#en-dir">5. Reading order</a><a href="#en-save">6. Create the PDF</a><a href="#en-keys">Shortcuts</a><a href="#en-faq">FAQ</a>
+  </nav>
+  <div class="docwrap">
+    <h2 id="en-start"><span class="n">★</span>Quick start</h2>
+    <ol class="steps">
+      <li><b>Drop a PDF</b>Open the tool and drop your scanned PDF onto the page.</li>
+      <li><b>Check the preview</b>Make sure the red split line sits on the book's gutter.</li>
+      <li><b>Create PDF</b>Press the button and <code>name_split.pdf</code> is saved.</li>
+    </ol>
+    <p class="muted">That is all most files need. The sections below cover what to do when the result is not quite right.</p>
+
+    <h2 id="en-open"><span class="n">1</span>Open a file</h2>
+    <p>Open the tool in Chrome, Edge, Safari or any modern browser. Nothing is installed, and it works on phones too.</p>
+    <ul>
+      <li><b>Drag and drop</b> a PDF onto the page, or click the box in the middle to choose one.</li>
+      <li>While working, drop another PDF or press <span class="ui">Change</span> at the top left to switch files.</li>
+      <li>The interface language (한국어 · English · 中文 · 日本語) can be changed at the top right.</li>
+    </ul>
+    <div class="note"><b>Your file is never uploaded.</b> All processing happens inside the browser on your own computer. An internet connection is only needed the first time, to fetch the PDF libraries (pdf.js and pdf-lib).</div>
+
+    <h2 id="en-check"><span class="n">2</span>Which pages to split</h2>
+    <p>Each page gets a preview card. The tool treats <b>landscape pages as spreads</b> and marks them for splitting; <b>portrait pages</b> (front and back covers, for example) are kept whole.</p>
+    <p>Use the buttons under each card to change a page:</p>
+    <div class="options">
+      <div class="option"><span class="ui">Split</span><p>Cut into two pages at the split line. The numbers on the preview are the page numbers in the result.</p></div>
+      <div class="option"><span class="ui">Whole</span><p>Keep the page as it is. For covers and single pages.</p></div>
+      <div class="option"><span class="ui">Skip</span><p>Leave the page out of the result. For blank sheets and bad scans.</p></div>
+    </div>
+    <p>To change many pages at once, use <span class="ui">Choose pages to split</span> in the left panel: <span class="ui">Landscape only</span> · <span class="ui">All</span> · <span class="ui">None</span>. The panel shows <b>source pages → result pages</b> as you go.</p>
+
+    <h2 id="en-line"><span class="n">3</span>Set the split line</h2>
+    <p>If the book was not centred on the scanner, the gutter is off-centre and text from one page spills onto the other. There are three ways to fix it.</p>
+    <h3>All pages at once: Split position</h3>
+    <p>Move the <span class="ui">Split position</span> slider in the left panel and every split line moves together. If the book always sat in the same spot on the scanner, this is enough.</p>
+    <h3>Page by page: drag the red line</h3>
+    <p>Hover over the red line in a preview to reveal its handle. Drag it and <b>only that page</b> changes; the adjusted position (for example <span style="color:var(--accent);font-weight:600">52.3%</span>) appears under the page number.</p>
+    <ul>
+      <li><kbd>Double-click</kbd> the line to return to the global position.</li>
+      <li><span class="ui">Reset per-page lines</span> puts every page back at once.</li>
+      <li>Double-click a preview or press the magnifier to open the <b>enlarged view</b> for finer adjustment.</li>
+    </ul>
+    <h3>Automatically: Auto-fit</h3>
+    <p><span class="ui">Auto-fit</span> looks for the gutter on every page marked for splitting, using the <b>shadow</b> in the middle or the <b>blank margin</b> between the text blocks. Large files take a while; press the button again to stop.</p>
+    <div class="note tip">Auto-fit can be wrong on pages where a figure crosses the middle or the margins are very small. Skim the previews afterwards and fix odd pages by hand.</div>
+
+    <h2 id="en-overlap"><span class="n">4</span>Center overlap</h2>
+    <p>Controls how much of the area around the split line is kept. At 0% the pages are cut exactly at the line.</p>
+    <div class="figure">
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="Positive overlap includes the middle strip on both pages"><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h134M116 142h134"/></g></svg>
+        <figcaption><b>+ (overlap)</b> Both pages include a strip of the gutter.<br>Nothing is cut off when text runs close to the middle.</figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="Negative overlap removes the middle strip"><defs><pattern id="hatch-en" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="url(#hatch-en)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g></svg>
+        <figcaption><b>− (trim)</b> The middle strip is discarded.<br>Handy for removing the dark gutter shadow.</figcaption>
+      </figure>
+    </div>
+    <p>In the previews the overlap shows as <span style="background:var(--accent-soft);padding:0 6px;border-radius:4px">light red</span> and a trimmed strip as hatching. <b>+0.5% to +1%</b> is a good default.</p>
+
+    <h2 id="en-dir"><span class="n">5</span>Reading order</h2>
+    <p>Decides which of the two halves comes first.</p>
+    <table><thead><tr><th>Setting</th><th>Order</th><th>Use for</th></tr></thead><tbody>
+      <tr><td><span class="ui">Left → right</span></td><td>Left page, then right page</td><td>Most books in Korean, English and other horizontal scripts</td></tr>
+      <tr><td><span class="ui">Right → left</span></td><td>Right page, then left page</td><td>Vertical-text books, Japanese manga and novels</td></tr>
+    </tbody></table>
+    <p>The page numbers on the previews follow the setting, so you can check at a glance.</p>
+
+    <h2 id="en-save"><span class="n">6</span>Create the PDF</h2>
+    <p>Press <span class="ui">Create PDF</span>. A progress bar fills, and <code>name_split.pdf</code> lands in your browser's download folder. Use <span class="ui">Download again</span> and <span class="ui">Open</span> to check the result right away.</p>
+    <p>Not happy with it? Change the settings and press the button again. The original file is never modified.</p>
+
+    <h2 id="en-keys"><span class="n">⌨</span>Keyboard shortcuts</h2>
+    <table><thead><tr><th>Keys</th><th>Action</th><th>Where</th></tr></thead><tbody>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous / next page</td><td>Enlarged view</td></tr>
+      <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>Split / Whole / Skip</td><td>Enlarged view</td></tr>
+      <tr><td><kbd>Tab</kbd> to the line, then <kbd>←</kbd> <kbd>→</kbd></td><td>Move the split line by 0.2% (1% with <kbd>Shift</kbd>)</td><td>Preview, enlarged view</td></tr>
+      <tr><td><kbd>Double-click</kbd> the line</td><td>Reset this page's line to the global position</td><td>Preview, enlarged view</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Close the enlarged view</td><td>Enlarged view</td></tr>
+    </tbody></table>
+
+    <h2 id="en-faq"><span class="n">?</span>FAQ</h2>
+    <details open><summary>Does splitting reduce image quality?</summary><div><p>No. The scanned images are never redrawn or re-compressed. The original page is kept and only its <b>visible area (page box)</b> is halved, so quality is identical to the source. Both halves share the same image, so the file barely grows.</p></div></details>
+    <details><summary>Is OCR text (searchable text) preserved?</summary><div><p>Yes, but because only the visible area is cut, the text layer of the whole spread remains on both halves. Searching may hit words from the other page, and text extraction may mix in the neighbouring page. If you need clean text, run OCR again on the split PDF.</p></div></details>
+    <details><summary>Can the cut-off part be seen in other programs?</summary><div><p>Not in ordinary viewers, e-readers or print. The original image is still inside the file, though, so a PDF editor that widens the page box will reveal it. Do not use this tool to hide content that must stay hidden.</p></div></details>
+    <details><summary>Does it handle scans rotated by 90°?</summary><div><p>Yes. If the PDF carries a rotation flag, pages are split as they appear on screen. If the image itself was saved sideways with no rotation flag, straighten the pages in another program first.</p></div></details>
+    <details><summary>What about very large files?</summary><div><p>Files of several hundred megabytes open fine, since everything runs in browser memory, but things slow down. Previews are rendered only for visible pages, and Auto-fit takes time proportional to the page count. Close other tabs if it gets sluggish.</p></div></details>
+    <details><summary>A password-protected PDF will not open.</summary><div><p>PDFs with an open password cannot be read. PDFs that open but restrict printing or editing (a permissions password) are encrypted inside and cannot be split either. In both cases, save an unprotected copy with a PDF program first.</p></div></details>
+    <details><summary>It says the libraries could not be loaded.</summary><div><p>The browser could not download the PDF libraries. Check your internet connection and reload. A corporate firewall may be blocking <code>cdnjs.cloudflare.com</code>.</p></div></details>
+  </div>
+</div>
+</article>
+
+<!-- ═══════════════════════════ 中文 ═══════════════════════════ -->
+<article class="doc" data-lang="zh">
+<section class="hero-band"><div class="hero-inner">
+  <div>
+    <h1>摊开扫描的 PDF，<br><em>一页一页</em>地读</h1>
+    <p class="lead">把一张含两页的扫描件按左右页裁开，生成在平板和电子书阅读器上可以逐页翻阅的 PDF。</p>
+    <div class="chips"><span class="chip">无需安装</span><span class="chip">文件只在本机</span><span class="chip">画质不变</span><span class="chip">逐页调整</span></div>
+  </div>
+  <figure class="hero-art">
+    <svg viewBox="0 0 640 210" role="img" aria-label="一张含两页的扫描件变成两张单页">
+      <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/><path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/></g>
+      <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">分割线</text>
+      <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M296 110h52M338 100l10 10-10 10"/></g>
+      <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
+      <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
+      <circle cx="435" cy="176" r="10" fill="var(--accent)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+      <circle cx="565" cy="176" r="10" fill="var(--accent)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+    </svg>
+    <figcaption>一张扫描件 → 两页</figcaption>
+  </figure>
+</div></section>
+
+<div class="layout">
+  <nav class="toc" aria-label="目录">
+    <b>目录</b>
+    <a href="#zh-start">快速开始</a><a href="#zh-open">1. 打开文件</a><a href="#zh-check">2. 确认要拆分的页</a><a href="#zh-line">3. 对齐分割线</a><a href="#zh-overlap">4. 中间重叠</a><a href="#zh-dir">5. 阅读方向</a><a href="#zh-save">6. 生成 PDF</a><a href="#zh-keys">快捷键</a><a href="#zh-faq">常见问题</a>
+  </nav>
+  <div class="docwrap">
+    <h2 id="zh-start"><span class="n">★</span>快速开始</h2>
+    <ol class="steps">
+      <li><b>拖入 PDF</b>打开工具页面，把扫描 PDF 拖到页面上。</li>
+      <li><b>检查预览</b>确认红色分割线落在书的装订线上。</li>
+      <li><b>生成 PDF</b>点击按钮，文件保存为 <code>原名_split.pdf</code>。</li>
+    </ol>
+    <p class="muted">大多数文件这三步就够了。下面是结果不理想时会用到的功能。</p>
+
+    <h2 id="zh-open"><span class="n">1</span>打开文件</h2>
+    <p>用 Chrome、Edge、Safari 等浏览器打开工具。无需安装，手机上也能用。</p>
+    <ul>
+      <li>把 PDF <b>拖到页面上</b>，或点击中间的方框选择文件。</li>
+      <li>处理过程中拖入另一个 PDF，或点击左上角的 <span class="ui">更换</span>，即可切换文件。</li>
+      <li>界面语言（한국어 · English · 中文 · 日本語）可在右上角切换。</li>
+    </ul>
+    <div class="note"><b>文件不会被上传。</b>所有处理都在你自己电脑的浏览器里完成。只有第一次打开时需要联网下载 PDF 库（pdf.js、pdf-lib）。</div>
+
+    <h2 id="zh-check"><span class="n">2</span>确认要拆分的页</h2>
+    <p>打开文件后每页都有一张预览卡片。工具把<b>横向页视为跨页</b>并标记为拆分，<b>纵向页</b>（如封面、封底）保持整页。</p>
+    <p>用卡片下方的按钮可以逐页更改：</p>
+    <div class="options">
+      <div class="option"><span class="ui">拆分</span><p>按分割线裁成两页。预览上的数字是结果 PDF 中的页码。</p></div>
+      <div class="option"><span class="ui">整页</span><p>不拆分，原样保留。用于封面和单页。</p></div>
+      <div class="option"><span class="ui">排除</span><p>不放入结果 PDF。用于空白页或扫描失败的页。</p></div>
+    </div>
+    <p>要批量更改，请用左侧面板的 <span class="ui">批量选择要拆分的页</span>：<span class="ui">仅横向页</span> · <span class="ui">全部</span> · <span class="ui">不拆分</span>。面板下方会即时显示<b>原文件页数 → 结果页数</b>。</p>
+
+    <h2 id="zh-line"><span class="n">3</span>对齐分割线</h2>
+    <p>扫描时书没有放在正中间，装订线就会偏离中心，一页的文字会跑到另一页上。有三种对齐方式。</p>
+    <h3>整体调整：分割线位置</h3>
+    <p>拖动左侧面板的 <span class="ui">分割线位置</span> 滑块，所有页的分割线一起移动。如果书每次都放在扫描仪的同一位置，这一步就够了。</p>
+    <h3>逐页调整：拖动红线</h3>
+    <p>把鼠标放在预览的红线上会出现把手，拖动后<b>只有该页</b>被调整，页码下方会显示调整后的位置（例如 <span style="color:var(--accent);font-weight:600">52.3%</span>）。</p>
+    <ul>
+      <li><kbd>双击</kbd>红线可恢复为整体设置的位置。</li>
+      <li>有逐页调整过的页时，可用 <span class="ui">清除逐页调整</span> 一次全部还原。</li>
+      <li>双击预览或点击放大镜按钮，会打开<b>放大查看</b>窗口，便于精确对齐。</li>
+    </ul>
+    <h3>自动查找：自动对齐</h3>
+    <p>点击 <span class="ui">自动对齐</span>，工具会在每个标记为拆分的页上寻找装订线并移动分割线。依据是中间的<b>阴影</b>或没有文字的<b>空白边距</b>。页数多时需要一些时间，进行中再点一次即可停止。</p>
+    <div class="note tip">当图片横跨中间或几乎没有边距时，自动对齐可能出错。运行后请浏览一遍预览，只手动修正异常的页。</div>
+
+    <h2 id="zh-overlap"><span class="n">4</span>中间重叠</h2>
+    <p>决定分割线两侧保留多少。滑块在中间（0%）时正好沿分割线裁开。</p>
+    <div class="figure">
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="重叠为正时中间部分同时进入两页"><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h134M116 142h134"/></g></svg>
+        <figcaption><b>+（重叠）</b>装订线附近同时进入两页。<br>文字贴近中间时不会被切掉。</figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="重叠为负时中间部分被裁掉"><defs><pattern id="hatch-zh" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="url(#hatch-zh)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g></svg>
+        <figcaption><b>−（裁掉）</b>丢弃中间的一条。<br>适合去掉装订线的黑色阴影。</figcaption>
+      </figure>
+    </div>
+    <p>预览中重叠部分显示为<span style="background:var(--accent-soft);padding:0 6px;border-radius:4px">浅红色</span>，裁掉的部分显示为斜线。一般 <b>+0.5% ~ +1%</b> 比较合适。</p>
+
+    <h2 id="zh-dir"><span class="n">5</span>阅读方向</h2>
+    <p>决定拆开的两页哪一页在前。</p>
+    <table><thead><tr><th>设置</th><th>顺序</th><th>适用</th></tr></thead><tbody>
+      <tr><td><span class="ui">左 → 右</span></td><td>先左页，后右页</td><td>大多数横排书籍</td></tr>
+      <tr><td><span class="ui">右 → 左</span></td><td>先右页，后左页</td><td>竖排古籍、日本漫画和小说</td></tr>
+    </tbody></table>
+    <p>预览上的页码会随方向变化，一眼就能确认。</p>
+
+    <h2 id="zh-save"><span class="n">6</span>生成 PDF</h2>
+    <p>点击 <span class="ui">生成 PDF</span>，进度条走完后 <code>原名_split.pdf</code> 会保存到浏览器的下载文件夹。完成后可用 <span class="ui">再次下载</span> 和 <span class="ui">打开查看</span> 立即检查结果。</p>
+    <p>不满意就改好设置再点一次。原文件不会被改动。</p>
+
+    <h2 id="zh-keys"><span class="n">⌨</span>快捷键</h2>
+    <table><thead><tr><th>按键</th><th>作用</th><th>位置</th></tr></thead><tbody>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>上一页 / 下一页</td><td>放大查看</td></tr>
+      <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>拆分 / 整页 / 排除</td><td>放大查看</td></tr>
+      <tr><td><kbd>Tab</kbd> 选中分割线后 <kbd>←</kbd> <kbd>→</kbd></td><td>每次移动 0.2%（按住 <kbd>Shift</kbd> 为 1%）</td><td>预览、放大查看</td></tr>
+      <tr><td><kbd>双击</kbd>分割线</td><td>把该页分割线恢复为整体设置</td><td>预览、放大查看</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>关闭放大查看</td><td>放大查看</td></tr>
+    </tbody></table>
+
+    <h2 id="zh-faq"><span class="n">?</span>常见问题</h2>
+    <details open><summary>拆分会降低画质吗？</summary><div><p>不会。扫描图片不会被重绘或重新压缩。原页保持不变，只把<b>可见区域（页面框）</b>改为一半，所以画质与原文件相同。两页共用同一张图片，文件大小也几乎不增加。</p></div></details>
+    <details><summary>OCR 文字（可搜索的文本）还在吗？</summary><div><p>在。但由于只裁剪可见区域，整个跨页的文字层会同时留在两页上。在阅读器里搜索时可能匹配到另一页的文字，提取文本时也可能混入相邻页。需要干净文本的话，请对拆分后的 PDF 重新做 OCR。</p></div></details>
+    <details><summary>被裁掉的部分在别的程序里会不会又显示出来？</summary><div><p>在普通阅读器、电子书设备和打印中不会显示。但原始图片仍在文件里，用 PDF 编辑软件扩大页面框就能再看到。需要隐藏的内容请不要用本工具处理。</p></div></details>
+    <details><summary>旋转了 90 度的扫描件能处理吗？</summary><div><p>可以。如果 PDF 带有旋转信息，会按屏幕上显示的方向拆分。如果图片本身是横着保存的（没有旋转信息），请先用其他程序把页面转正再打开。</p></div></details>
+    <details><summary>文件很大怎么办？</summary><div><p>处理在浏览器内存中进行，几百 MB 的文件也能打开，但会变慢。预览只渲染屏幕上可见的页，自动对齐所需时间与页数成正比。太卡的话请关闭其他标签页再试。</p></div></details>
+    <details><summary>带密码的 PDF 打不开。</summary><div><p>设置了打开密码的 PDF 无法读取。能打开但限制打印、编辑的 PDF（权限密码）内容同样是加密的，也无法拆分。这两种情况都请先用 PDF 软件另存一份无密码的副本。</p></div></details>
+    <details><summary>提示“无法加载所需的库”。</summary><div><p>浏览器没能下载 PDF 库。请检查网络连接后刷新页面。公司防火墙也可能拦截了 <code>cdnjs.cloudflare.com</code>。</p></div></details>
+  </div>
+</div>
+</article>
+
+<!-- ═══════════════════════════ 日本語 ═══════════════════════════ -->
+<article class="doc" data-lang="ja">
+<section class="hero-band"><div class="hero-inner">
+  <div>
+    <h1>見開きスキャンの PDF を<br><em>1 ページずつ</em>読む</h1>
+    <p class="lead">1 枚に 2 ページ写ったスキャンを左右に切り分け、タブレットや電子書籍リーダーで 1 ページずつめくれる PDF にします。</p>
+    <div class="chips"><span class="chip">インストール不要</span><span class="chip">ファイルは PC の中だけ</span><span class="chip">画質そのまま</span><span class="chip">ページごとに調整</span></div>
+  </div>
+  <figure class="hero-art">
+    <svg viewBox="0 0 640 210" role="img" aria-label="2 ページ写った 1 枚のスキャンが 2 枚の単ページになる図">
+      <rect x="20" y="30" width="250" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M42 62h78M42 80h78M42 98h66M42 116h78M42 134h72M42 152h56"/><path d="M168 62h78M168 80h70M168 98h78M168 116h60M168 134h78M168 152h66"/></g>
+      <path d="M145 16v188" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <text x="145" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">分割線</text>
+      <g fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M296 110h52M338 100l10 10-10 10"/></g>
+      <rect x="376" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M396 62h78M396 80h78M396 98h66M396 116h78M396 134h72M396 152h56"/></g>
+      <rect x="506" y="30" width="118" height="160" rx="6" fill="var(--paper)" stroke="var(--line-strong)"/>
+      <g stroke="var(--text-line)" stroke-width="5" stroke-linecap="round"><path d="M526 62h78M526 80h70M526 98h78M526 116h60M526 134h78M526 152h66"/></g>
+      <circle cx="435" cy="176" r="10" fill="var(--accent)"/><text x="435" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+      <circle cx="565" cy="176" r="10" fill="var(--accent)"/><text x="565" y="180.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+    </svg>
+    <figcaption>スキャン 1 枚 → 2 ページ</figcaption>
+  </figure>
+</div></section>
+
+<div class="layout">
+  <nav class="toc" aria-label="目次">
+    <b>目次</b>
+    <a href="#ja-start">はじめに</a><a href="#ja-open">1. ファイルを開く</a><a href="#ja-check">2. 分割するページ</a><a href="#ja-line">3. 分割線を合わせる</a><a href="#ja-overlap">4. 中央の重なり</a><a href="#ja-dir">5. 読む順序</a><a href="#ja-save">6. PDF を作成</a><a href="#ja-keys">ショートカット</a><a href="#ja-faq">よくある質問</a>
+  </nav>
+  <div class="docwrap">
+    <h2 id="ja-start"><span class="n">★</span>はじめに</h2>
+    <ol class="steps">
+      <li><b>PDF をドロップ</b>ツールを開き、スキャン PDF を画面に置きます。</li>
+      <li><b>プレビューを確認</b>赤い分割線が本ののど（中央）に合っているか見ます。</li>
+      <li><b>PDF を作成</b>ボタンを押すと <code>元の名前_split.pdf</code> で保存されます。</li>
+    </ol>
+    <p class="muted">ほとんどはこの 3 ステップで終わります。以下は結果が思い通りでないときに使う機能です。</p>
+
+    <h2 id="ja-open"><span class="n">1</span>ファイルを開く</h2>
+    <p>Chrome、Edge、Safari などのブラウザでツールを開きます。インストールは不要で、スマートフォンでも動きます。</p>
+    <ul>
+      <li>PDF を画面に<b>ドラッグ＆ドロップ</b>するか、中央の枠をクリックして選びます。</li>
+      <li>作業中に別の PDF をドロップするか、左上の <span class="ui">変更</span> を押すとファイルが切り替わります。</li>
+      <li>表示言語（한국어 · English · 中文 · 日本語）は右上で選べます。</li>
+    </ul>
+    <div class="note"><b>ファイルはアップロードされません。</b>すべての処理は自分の PC のブラウザ内で行います。最初に開くとき PDF ライブラリ（pdf.js、pdf-lib）をダウンロードするため、その時だけインターネット接続が必要です。</div>
+
+    <h2 id="ja-check"><span class="n">2</span>分割するページを確認する</h2>
+    <p>ファイルを開くとページごとにプレビューカードが並びます。ツールは<b>横長のページを見開き</b>とみなして分割に、<b>縦長のページ</b>（表紙・裏表紙など）はそのままに設定します。</p>
+    <p>カード下のボタンでページごとに変えられます。</p>
+    <div class="options">
+      <div class="option"><span class="ui">分割</span><p>分割線で 2 ページに分けます。プレビュー上の数字が結果 PDF でのページ番号です。</p></div>
+      <div class="option"><span class="ui">そのまま</span><p>分割せずそのまま入れます。表紙や 1 ページだけの紙に。</p></div>
+      <div class="option"><span class="ui">除外</span><p>結果 PDF に入れません。白紙や失敗したスキャンを捨てるときに。</p></div>
+    </div>
+    <p>まとめて変えるには左パネルの <span class="ui">分割するページをまとめて選ぶ</span> で <span class="ui">横長のみ</span> · <span class="ui">すべて</span> · <span class="ui">分割しない</span> を選びます。左下に<b>元のページ数 → 結果のページ数</b>がすぐ表示されます。</p>
+
+    <h2 id="ja-line"><span class="n">3</span>分割線を合わせる</h2>
+    <p>スキャン時に本が中央に置かれていないと、のどが中央からずれ、片方の文字が隣のページにはみ出します。合わせ方は 3 つあります。</p>
+    <h3>全ページ一括：分割線の位置</h3>
+    <p>左パネルの <span class="ui">分割線の位置</span> スライダーを動かすと、全ページの分割線が一緒に動きます。本をいつも同じ場所に置いてスキャンしたなら、これで十分です。</p>
+    <h3>ページごと：赤い線をドラッグ</h3>
+    <p>プレビューの赤い線にマウスを乗せるとつまみが現れます。ドラッグすると<b>そのページだけ</b>が調整され、ページ番号の下に位置（例：<span style="color:var(--accent);font-weight:600">52.3%</span>）が表示されます。</p>
+    <ul>
+      <li>線を<kbd>ダブルクリック</kbd>すると共通の位置に戻ります。</li>
+      <li>個別に調整したページがあるときは <span class="ui">ページ別の調整を消す</span> でまとめて戻せます。</li>
+      <li>プレビューをダブルクリックするか虫めがねボタンを押すと<b>拡大表示</b>が開き、より正確に合わせられます。</li>
+    </ul>
+    <h3>自動で探す：自動調整</h3>
+    <p><span class="ui">自動調整</span> を押すと、分割に設定したページごとにのどを探して分割線を動かします。中央の<b>影</b>や文字のない<b>余白</b>を手がかりにします。ページが多いと時間がかかり、途中でもう一度押すと止まります。</p>
+    <div class="note tip">図が中央にかかるページや余白がほとんどないページでは、自動調整が外れることがあります。実行後にプレビューをざっと見て、おかしいページだけ手で直してください。</div>
+
+    <h2 id="ja-overlap"><span class="n">4</span>中央の重なり</h2>
+    <p>分割線の両側をどれだけ含めるかを決めます。スライダーが中央（0%）なら分割線でぴったり切ります。</p>
+    <div class="figure">
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="重なりをプラスにすると中央部分が両ページに入る"><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="var(--accent-soft)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h134M116 142h134"/></g></svg>
+        <figcaption><b>+（重ねる）</b>のど付近が両ページに入ります。<br>文字が中央まで寄っていても切れません。</figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="0 0 260 150" role="img" aria-label="重なりをマイナスにすると中央部分が切り落とされる"><defs><pattern id="hatch-ja" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="var(--muted)" opacity=".55"/></pattern></defs><rect x="10" y="15" width="240" height="120" rx="5" fill="var(--paper)" stroke="var(--line-strong)"/><rect x="116" y="15" width="28" height="120" fill="url(#hatch-ja)"/><g stroke="var(--text-line)" stroke-width="4" stroke-linecap="round"><path d="M28 42h80M28 58h80M28 74h70M28 90h80M28 106h60M152 42h80M152 58h74M152 74h80M152 90h66M152 106h80"/></g><path d="M130 8v134" stroke="var(--accent)" stroke-width="2"/><g stroke="var(--ink-2)" stroke-width="1.5"><path d="M10 146h106M144 146h106"/></g></svg>
+        <figcaption><b>−（切り落とす）</b>中央の帯を捨てます。<br>のどの黒い影を消したいときに。</figcaption>
+      </figure>
+    </div>
+    <p>プレビューでは重なる部分が<span style="background:var(--accent-soft);padding:0 6px;border-radius:4px">薄い赤</span>、切り落とす部分が斜線で表示されます。ふつうは <b>+0.5% ～ +1%</b> くらいが無難です。</p>
+
+    <h2 id="ja-dir"><span class="n">5</span>読む順序</h2>
+    <p>分けた 2 ページのどちらを先にするかを決めます。</p>
+    <table><thead><tr><th>設定</th><th>順序</th><th>こんな本に</th></tr></thead><tbody>
+      <tr><td><span class="ui">左 → 右</span></td><td>左ページ、次に右ページ</td><td>横書きの本のほとんど</td></tr>
+      <tr><td><span class="ui">右 → 左</span></td><td>右ページ、次に左ページ</td><td>縦書きの本、マンガ・小説</td></tr>
+    </tbody></table>
+    <p>プレビューのページ番号が設定に合わせて変わるので、目で確認できます。</p>
+
+    <h2 id="ja-save"><span class="n">6</span>PDF を作成する</h2>
+    <p><span class="ui">PDF を作成</span> を押すと進行バーが伸び、終わると <code>元の名前_split.pdf</code> がブラウザのダウンロードフォルダーに保存されます。保存後の <span class="ui">もう一度保存</span> と <span class="ui">開く</span> で結果をすぐ確認できます。</p>
+    <p>気に入らなければ設定を直してもう一度押すだけです。元のファイルは変わりません。</p>
+
+    <h2 id="ja-keys"><span class="n">⌨</span>ショートカット</h2>
+    <table><thead><tr><th>キー</th><th>動作</th><th>場所</th></tr></thead><tbody>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>前のページ / 次のページ</td><td>拡大表示</td></tr>
+      <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>分割 / そのまま / 除外</td><td>拡大表示</td></tr>
+      <tr><td><kbd>Tab</kbd> で線を選んでから <kbd>←</kbd> <kbd>→</kbd></td><td>分割線を 0.2% ずつ動かす（<kbd>Shift</kbd> 併用で 1%）</td><td>プレビュー、拡大表示</td></tr>
+      <tr><td>線を<kbd>ダブルクリック</kbd></td><td>このページの分割線を共通の位置に戻す</td><td>プレビュー、拡大表示</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>拡大表示を閉じる</td><td>拡大表示</td></tr>
+    </tbody></table>
+
+    <h2 id="ja-faq"><span class="n">?</span>よくある質問</h2>
+    <details open><summary>分割すると画質が落ちますか？</summary><div><p>いいえ。スキャン画像を描き直したり再圧縮したりしません。元のページをそのまま残し、<b>表示範囲（ページボックス）だけ</b>を半分にするので、画質は元と同じです。2 ページが同じ画像を共有するため、ファイルサイズもほとんど増えません。</p></div></details>
+    <details><summary>OCR の文字（検索できるテキスト）は残りますか？</summary><div><p>はい。ただし表示範囲だけを切る方式なので、見開き全体の文字情報が両ページに残ります。ビューアで検索すると反対側の文字がヒットしたり、テキスト抽出で隣のページの文字が混ざったりすることがあります。きれいなテキストが必要なら、分割後の PDF に OCR をかけ直してください。</p></div></details>
+    <details><summary>切り落とした部分が他のソフトで見えてしまいませんか？</summary><div><p>一般のビューア、電子書籍リーダー、印刷では見えません。ただし元の画像はファイル内にそのまま残っているため、PDF 編集ソフトでページボックスを広げると再び見えます。隠すべき内容にはこのツールを使わないでください。</p></div></details>
+    <details><summary>90 度回転したスキャンでも大丈夫ですか？</summary><div><p>はい。PDF に回転情報がある場合は、画面に表示される向きを基準に分割します。画像そのものが横向きに保存されている（回転情報がない）場合は、先に別のソフトでページを正しい向きにしてから開いてください。</p></div></details>
+    <details><summary>ファイルが大きいとどうなりますか？</summary><div><p>ブラウザのメモリ内で処理するので数百 MB のファイルも開けますが、遅くなることがあります。プレビューは画面に見えるページだけ描画し、自動調整はページ数に比例して時間がかかります。重いときは他のタブを閉じてお試しください。</p></div></details>
+    <details><summary>パスワード付きの PDF が開けません。</summary><div><p>開くためのパスワードがある PDF は読めません。開けても印刷・編集だけ制限した PDF（権限パスワード）も中身が暗号化されているため分割できません。どちらも PDF ソフトでパスワードを解除したコピーを作ってから開いてください。</p></div></details>
+    <details><summary>「ライブラリを読み込めませんでした」と出ます。</summary><div><p>ブラウザが PDF ライブラリをダウンロードできなかった状態です。インターネット接続を確認して再読み込みしてください。会社のファイアウォールが <code>cdnjs.cloudflare.com</code> を遮断している可能性もあります。</p></div></details>
+  </div>
+</div>
+</article>
+
+<footer id="foot"></footer>
+
+<script>
+(() => {
+  const UI = {
+    ko: { title: '펼침면 나누기 사용 설명', brand: '펼침면 나누기', sub: '사용 설명', open: '도구 열기 →', foot: '펼침면 나누기 · 모든 처리는 브라우저 안에서 이루어집니다' },
+    en: { title: 'Spread Split — User guide', brand: 'Spread Split', sub: 'user guide', open: 'Open the tool →', foot: 'Spread Split · everything runs inside your browser' },
+    zh: { title: '跨页拆分 使用说明', brand: '跨页拆分', sub: '使用说明', open: '打开工具 →', foot: '跨页拆分 · 所有处理都在浏览器内完成' },
+    ja: { title: '見開き分割 使い方', brand: '見開き分割', sub: '使い方', open: 'ツールを開く →', foot: '見開き分割 · すべての処理はブラウザ内で行われます' },
+  };
+  const KEY = 'spreadSplit.lang';
+  const sel = document.getElementById('lang');
+  function pick() {
+    const h = location.hash.replace('#', '').slice(0, 2);
+    if (UI[h]) return h;
+    const saved = localStorage.getItem(KEY);
+    if (UI[saved]) return saved;
+    for (const l of navigator.languages || [navigator.language || 'en']) { const p = l.toLowerCase().slice(0, 2); if (UI[p]) return p; }
+    return 'en';
+  }
+  function show(lang, updateHash) {
+    document.documentElement.lang = lang;
+    document.title = UI[lang].title;
+    document.getElementById('brandName').textContent = UI[lang].brand;
+    document.getElementById('brandSub').textContent = UI[lang].sub;
+    document.getElementById('openTool').textContent = UI[lang].open;
+    document.getElementById('foot').textContent = UI[lang].foot;
+    document.querySelectorAll('article.doc').forEach(a => a.classList.toggle('active', a.dataset.lang === lang));
+    sel.value = lang;
+    if (updateHash) history.replaceState(null, '', '#' + lang);
+  }
+  show(pick(), false);
+  sel.addEventListener('change', () => { localStorage.setItem(KEY, sel.value); show(sel.value, true); window.scrollTo({ top: 0 }); });
+  // 목차 링크(#ko-open 등)는 언어를 바꾸지 않도록, 언어 코드만 있는 해시에만 반응
+  window.addEventListener('hashchange', () => { const h = location.hash.replace('#', ''); if (UI[h]) show(h, false); });
+})();
+</script>
 </body>
 </html>
