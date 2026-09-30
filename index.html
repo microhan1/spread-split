@@ -1121,6 +1121,20 @@ function applyBox(page, r) {
   ['TrimBox', 'BleedBox', 'ArtBox'].forEach(k => page.node.delete(PDFName.of(k)));
 }
 
+// 주석의 소속 쪽(/P)을 그 쪽으로 맞춘다. 복사해 온 주석의 /P는 쪽 목록에 없는
+// 원본 쪽 사본을 가리키고 있어서, 양식 칸을 /P로 찾는 뷰어에서 어긋난다.
+function ownAnnot(dict, page) {
+  dict.set(PDFLib.PDFName.of('P'), page.ref);
+}
+function ownAnnots(page) {
+  const annots = page.node.Annots();
+  if (!annots) return;
+  for (let i = 0; i < annots.size(); i++) {
+    const dict = page.doc.context.lookup(annots.get(i));
+    if (dict instanceof PDFLib.PDFDict) ownAnnot(dict, page);
+  }
+}
+
 // 주석(링크·하이라이트 등)은 자기 사각형이 걸치는 쪽에만 남긴다. 양쪽에 걸치면 둘째 쪽용으로 복제.
 function splitAnnots(page1, page2, box1, box2) {
   const { PDFName, PDFArray, PDFDict, PDFNumber } = PDFLib;
@@ -1136,12 +1150,12 @@ function splitAnnots(page1, page2, box1, box2) {
     const dict = ctx.lookup(ref);
     if (!(dict instanceof PDFDict)) continue;
     const rectArr = dict.lookupMaybe(PDFName.of('Rect'), PDFArray);
-    if (!rectArr || rectArr.size() < 4) { keep1.push(ref); continue; }
+    if (!rectArr || rectArr.size() < 4) { ownAnnot(dict, page1); keep1.push(ref); continue; }
     let r;
-    try { r = [0, 1, 2, 3].map(k => rectArr.lookup(k, PDFNumber).asNumber()); } catch { keep1.push(ref); continue; }
+    try { r = [0, 1, 2, 3].map(k => rectArr.lookup(k, PDFNumber).asNumber()); } catch { ownAnnot(dict, page1); keep1.push(ref); continue; }
     r = [Math.min(r[0], r[2]), Math.min(r[1], r[3]), Math.max(r[0], r[2]), Math.max(r[1], r[3])];
     const in1 = hits(r, box1), in2 = hits(r, box2);
-    if (in1) keep1.push(ref);
+    if (in1) { ownAnnot(dict, page1); keep1.push(ref); }
     if (in2 && !in1) { dict.set(PDFName.of('P'), page2.ref); keep2.push(ref); }
     else if (in2) { const c = dict.clone(ctx); c.set(PDFName.of('P'), page2.ref); keep2.push(ctx.register(c)); }
   }
@@ -1155,33 +1169,37 @@ async function build() {
   if (S.busy) return;
   const { PDFDocument, PDFPage } = PDFLib;
   S.busy = true;
+  // 누른 순간의 설정으로 만든다. 큰 파일은 몇 초 걸리는데, 그사이 분할선·겹침·방향을
+  // 바꾸면 앞쪽과 뒤쪽이 서로 다른 설정으로 나뉘어 섞였다.
+  const pages = S.pages.map(p => ({ mode: p.mode, pos: effPos(p) }));
+  const { bytes: srcBytes, name, overlap, dir } = S;
   el.btnBuild.disabled = true;
   el.done.hidden = true;
   el.buildBarWrap.hidden = false;
   const setProg = (f, label) => { el.buildBar.style.width = (f * 100) + '%'; if (label) el.btnBuildLabel.textContent = label; };
   try {
     setProg(0.03, t('progRead')); await tick();
-    const src = await PDFDocument.load(S.bytes, { ignoreEncryption: true, updateMetadata: false });
+    const src = await PDFDocument.load(srcBytes, { ignoreEncryption: true, updateMetadata: false });
     const out = await PDFDocument.create();
-    const keep = S.pages.map((p, i) => i).filter(i => S.pages[i].mode !== 'skip');
+    const keep = pages.map((p, i) => i).filter(i => pages[i].mode !== 'skip');
 
     setProg(0.2, t('progCopy')); await tick();
     const copied = await out.copyPages(src, keep);
 
     for (let k = 0; k < keep.length; k++) {
-      const p = S.pages[keep[k]];
+      const p = pages[keep[k]];
       const page = copied[k];
-      if (p.mode === 'whole') { out.addPage(page); continue; }
+      if (p.mode === 'whole') { ownAnnots(page); out.addPage(page); continue; }
 
       const box = readBox(page);
       const rot = ((page.getRotation().angle % 360) + 360) % 360;
-      const { left, right } = halves(effPos(p), S.overlap);
+      const { left, right } = halves(p.pos, overlap);
 
       // 둘째 쪽은 같은 내용·리소스를 참조하는 얕은 복사 → 이미지가 두 번 저장되지 않음
       const leaf2 = page.node.clone();
       const page2 = PDFPage.of(leaf2, out.context.register(leaf2), out);
 
-      const [first, second] = S.dir === 'ltr' ? [left, right] : [right, left];
+      const [first, second] = dir === 'ltr' ? [left, right] : [right, left];
       const box1 = visualToBox(box, rot, first), box2 = visualToBox(box, rot, second);
       applyBox(page, box1);
       applyBox(page2, box2);
@@ -1205,7 +1223,7 @@ async function build() {
     const blob = new Blob([bytes], { type: 'application/pdf' });
     if (S.outUrl) URL.revokeObjectURL(S.outUrl);
     S.outUrl = URL.createObjectURL(blob);
-    const outName = S.name.replace(/\.pdf$/i, '') + '_split.pdf';
+    const outName = name.replace(/\.pdf$/i, '') + '_split.pdf';
     const a = document.createElement('a');
     a.href = S.outUrl; a.download = outName;
     document.body.appendChild(a); a.click(); a.remove();
