@@ -42,7 +42,7 @@ Split two-page scanned PDF spreads into single pages — right in your browser, 
 
 나눈 파일의 여백까지 잘라 글자를 키우려면 [TrimPDF](https://github.com/microhan1/TrimPDF)를 이어서 쓰세요. 순서는 나누기 → 여백 자르기입니다.
 
-책을 다 읽었다면 [책갈피 라이브러리](https://chaekgalpi.co.kr/?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit)에 기록해 보세요. 읽은 책과 독서록을 남기는 웹 서비스입니다.
+책을 다 읽었다면 [책갈피 라이브러리](https://chaekgalpi.co.kr/tools/spreadsplit?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit)에 기록해 보세요. 읽은 책과 독서록을 남기는 웹 서비스입니다.
 
 ## English
 
@@ -51,7 +51,7 @@ Spread Split takes a PDF scanned two pages per sheet and cuts every spread into 
 - Use it at https://microhan1.github.io/spread-split/ or open `index.html` locally.
 - Adjust the split line per page, auto-detect the gutter, add an overlap, and choose left-to-right or right-to-left order.
 - Interface and [user guide](https://microhan1.github.io/spread-split/guide.html#en) in Korean, English, Chinese (Simplified) and Japanese.
-- Finished the book? Log it on [Chaekgalpi Library](https://chaekgalpi.co.kr/?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit), a web service for keeping track of the books you read (Korean only).
+- Finished the book? Log it on [Chaekgalpi Library](https://chaekgalpi.co.kr/tools/spreadsplit?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit), a web service for keeping track of the books you read (Korean only).
 
 ## 라이선스 / License
 
