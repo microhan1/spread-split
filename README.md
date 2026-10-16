@@ -3,7 +3,9 @@
 두 쪽 스캔 PDF를 왼쪽·오른쪽 쪽으로 나누는 브라우저 도구
 Split two-page scanned PDF spreads into single pages — right in your browser, no install.
 
-**바로 쓰기:** https://microhan1.github.io/spread-split/
+**바로 쓰기:** https://chaekgalpi.co.kr/apps/spreadsplit/
+
+옛 주소 https://microhan1.github.io/spread-split/ 로 열어도 새 주소로 자동으로 이동합니다.
 
 책을 펼쳐서 스캔하면 한 장에 두 쪽이 들어갑니다. 이 도구는 그런 PDF를 쪽마다 왼쪽·오른쪽으로 잘라 한 쪽씩 넘겨 볼 수 있는 새 PDF로 만듭니다.
 
@@ -24,12 +26,12 @@ Split two-page scanned PDF spreads into single pages — right in your browser, 
 
 ## 사용법
 
-1. https://microhan1.github.io/spread-split/ 을 엽니다. (또는 이 저장소의 `index.html`을 내려받아 브라우저로 엽니다.)
+1. https://chaekgalpi.co.kr/apps/spreadsplit/ 을 엽니다. (또는 이 저장소의 `index.html`을 내려받아 브라우저로 엽니다.)
 2. 스캔 PDF를 화면에 끌어다 놓습니다.
 3. 미리보기에서 빨간 분할선이 제본선에 맞는지 확인하고, 필요하면 「자동 맞춤」을 누르거나 선을 끌어 조정합니다.
 4. 「PDF 만들기」를 누르면 `파일명_split.pdf`가 저장됩니다.
 
-자세한 설명은 [사용 설명](https://microhan1.github.io/spread-split/guide.html)에 있습니다. 시험해 볼 파일이 없으면 [samples/test_spread_scan.pdf](samples/test_spread_scan.pdf)를 써 보세요.
+자세한 설명은 [사용 설명](https://chaekgalpi.co.kr/apps/spreadsplit/guide.html)에 있습니다. 시험해 볼 파일이 없으면 [samples/test_spread_scan.pdf](samples/test_spread_scan.pdf)를 써 보세요.
 
 ## 알아둘 점
 
@@ -48,9 +50,9 @@ Split two-page scanned PDF spreads into single pages — right in your browser, 
 
 Spread Split takes a PDF scanned two pages per sheet and cuts every spread into a left page and a right page. Everything runs in the browser; files never leave your computer. It only rewrites each page's crop box, so image quality and file size stay the same.
 
-- Use it at https://microhan1.github.io/spread-split/ or open `index.html` locally.
+- Use it at https://chaekgalpi.co.kr/apps/spreadsplit/ or open `index.html` locally. The old address https://microhan1.github.io/spread-split/ redirects there automatically.
 - Adjust the split line per page, auto-detect the gutter, add an overlap, and choose left-to-right or right-to-left order.
-- Interface and [user guide](https://microhan1.github.io/spread-split/guide.html#en) in Korean, English, Chinese (Simplified) and Japanese.
+- Interface and [user guide](https://chaekgalpi.co.kr/apps/spreadsplit/guide.html#en) in Korean, English, Chinese (Simplified) and Japanese.
 - Finished the book? Log it on [Chaekgalpi Library](https://chaekgalpi.co.kr/tools/spreadsplit?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit), a web service for keeping track of the books you read (Korean only).
 
 ## 라이선스 / License

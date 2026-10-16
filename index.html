@@ -2,6 +2,11 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<script>
+// GitHub 페이지(옛 주소)로 온 방문자만 새 주소로 보낸다. 책갈피 사이트 사본도 이 파일을 쓰므로 조건을 빼면 무한 이동.
+if (location.hostname.endsWith('github.io')) location.replace('https://chaekgalpi.co.kr/apps/spreadsplit/' + location.search + location.hash);
+</script>
+<link rel="canonical" href="https://chaekgalpi.co.kr/apps/spreadsplit/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>펼침면 나누기</title>
 <meta name="description" content="두 쪽이 한 장에 담긴 스캔 PDF를 왼쪽·오른쪽 쪽으로 나누는 브라우저 도구. Split two-page scanned PDF spreads in your browser.">
@@ -288,6 +293,7 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
 </style>
 </head>
 <body>
+<noscript><p style="margin:0;padding:10px 16px;background:#fff4d6;text-align:center">펼침면 나누기는 <a href="https://chaekgalpi.co.kr/apps/spreadsplit/">https://chaekgalpi.co.kr/apps/spreadsplit/</a> 에서 씁니다(자바스크립트 필요). Spread Split now lives at the address above.</p></noscript>
 
 <header class="topbar">
   <div class="brand">
