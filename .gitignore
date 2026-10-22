@@ -6,6 +6,7 @@ _test/
 *_split.pdf
 
 # 기타
-.claude/
+.claude/*
+!.claude/agents/
 Thumbs.db
 desktop.ini
