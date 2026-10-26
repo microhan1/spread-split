@@ -279,6 +279,9 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
   font-size: 20px; font-weight: 700;
 }
 
+.site-foot { max-width: 760px; margin: 0 auto; padding: 8px 20px 32px; text-align: center; font-size: 13px; color: var(--muted); }
+.site-foot a { color: var(--ink-2); }
+
 @media (max-width: 880px) {
   .workspace { grid-template-columns: 1fr; padding: 16px; }
   .panel { position: static; max-height: none; }
@@ -417,6 +420,10 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
   </section>
 </main>
 
+<footer class="site-foot">
+  <a href="https://chaekgalpi.co.kr/tools" id="lnkFootTools" data-i18n="footTools">책갈피 툴 전체</a> · <a href="https://chaekgalpi.co.kr/tools/spreadsplit?utm_source=web&amp;utm_medium=feedback#feedback" id="lnkFeedback" target="_blank" rel="noopener" data-track="spreadsplit-web-feedback" data-i18n="footFeedback">의견 보내기</a>
+</footer>
+
 <dialog class="viewer" id="viewer" data-i18n-aria="zoomTitle">
   <div class="v-head">
     <span class="title" id="vTitle"></span>
@@ -481,6 +488,7 @@ const I18N = {
     progRead: '원본 읽는 중…', progCopy: '쪽 복사하는 중…', progSplit: '쪽 나누는 중… {i}/{n}', progSave: '저장하는 중…', progDone: '완성!',
     done: '완성했어요. ', doneInfo: '{n}쪽 · {size} ', again: '다시 받기', view: '열어 보기',
     veil: '여기에 놓으면 이 파일로 바꿔요', producer: '펼침면 나누기 (pdf-lib)',
+    footTools: '책갈피 툴 전체', footFeedback: '의견 보내기',
   },
   en: {
     brand: 'Spread Split', brandSub: 'two-page scan splitter', guide: 'Guide', docTitle: 'Spread Split',
@@ -516,6 +524,7 @@ const I18N = {
     progRead: 'Reading source…', progCopy: 'Copying pages…', progSplit: 'Splitting pages… {i}/{n}', progSave: 'Saving…', progDone: 'Done!',
     done: 'Done. ', doneInfo: '{n} pages · {size} ', again: 'Download again', view: 'Open',
     veil: 'Drop to replace the current file', producer: 'Spread Split (pdf-lib)',
+    footTools: 'All tools', footFeedback: 'Send feedback',
   },
   zh: {
     brand: '跨页拆分', brandSub: 'Spread Split', guide: '使用说明', docTitle: '跨页拆分',
@@ -551,6 +560,7 @@ const I18N = {
     progRead: '正在读取原文件…', progCopy: '正在复制页面…', progSplit: '正在拆分页面… {i}/{n}', progSave: '正在保存…', progDone: '完成！',
     done: '已完成。', doneInfo: '{n} 页 · {size} ', again: '再次下载', view: '打开查看',
     veil: '放开即可替换当前文件', producer: 'Spread Split (pdf-lib)',
+    footTools: '全部工具', footFeedback: '发送反馈',
   },
   ja: {
     brand: '見開き分割', brandSub: 'Spread Split', guide: '使い方', docTitle: '見開き分割',
@@ -586,9 +596,13 @@ const I18N = {
     progRead: '元ファイルを読み込み中…', progCopy: 'ページをコピー中…', progSplit: 'ページを分割中… {i}/{n}', progSave: '保存中…', progDone: '完成！',
     done: '完成しました。', doneInfo: '{n} ページ · {size} ', again: 'もう一度保存', view: '開く',
     veil: 'ここにドロップするとこのファイルに切り替わります', producer: 'Spread Split (pdf-lib)',
+    footTools: 'すべてのツール', footFeedback: 'ご意見を送る',
   },
 };
 const LANG_KEY = 'spreadSplit.lang';
+// 꼬리말 링크는 책갈피 사이트 절대 주소 — 이 파일을 내려받아 file:// 로 열어도 맞게. 한국어 외 화면은 영어 페이지로.
+const SITE = 'https://chaekgalpi.co.kr';
+const FEEDBACK_QS = '?utm_source=web&utm_medium=feedback#feedback';
 let LANG = 'ko';
 // 저장소가 막힌 환경(사생활 보호 모드, 일부 file:// 등)에서도 동작하도록 감싼다
 const store = {
@@ -618,6 +632,9 @@ function applyLang(lang) {
   document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
   document.getElementById('lang').value = LANG;
   document.getElementById('guideLink').href = 'guide.html#' + LANG;
+  const site = SITE + (LANG === 'ko' ? '' : '/en');
+  document.getElementById('lnkFootTools').href = site + '/tools';
+  document.getElementById('lnkFeedback').href = site + '/tools/spreadsplit' + FEEDBACK_QS;
 }
 
 const $ = (s, r = document) => r.querySelector(s);
