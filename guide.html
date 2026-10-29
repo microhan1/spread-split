@@ -24,7 +24,7 @@ if (location.hostname.endsWith('github.io')) location.replace('https://chaekgalp
 html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
-  font: 16px/1.75 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  font: 1rem/1.75 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
   -webkit-font-smoothing: antialiased; word-break: keep-all;
 }
 html[lang="ja"] body { font-family: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; word-break: normal; }
@@ -37,7 +37,9 @@ button, select { font: inherit; color: inherit; }
 .topbar {
   position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 14px 24px;
   background: rgba(250, 248, 244, .86); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+  flex-wrap: wrap; row-gap: 8px;   /* 폭 320 이나 큰 글꼴에서는 「도구 열기」가 다음 줄 오른쪽으로 */
 }
+.topbar .btn { margin-left: auto; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; white-space: nowrap; }
 .brand svg { width: 26px; height: 26px; flex: none; }
 .brand small { font-weight: 500; color: var(--muted); }
@@ -45,12 +47,12 @@ button, select { font: inherit; color: inherit; }
 .lang {
   appearance: none; -webkit-appearance: none; padding: 7px 30px 7px 12px; border-radius: 9px; border: 1px solid var(--line);
   background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b877e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color: var(--ink-2); font-size: 14px; cursor: pointer;
+  color: var(--ink-2); font-size: .875rem; cursor: pointer;
 }
 .lang:hover { border-color: var(--line-strong); color: var(--ink); }
 .btn {
   display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; text-decoration: none;
-  font-size: 14px; font-weight: 600; background: var(--accent); color: #fff; white-space: nowrap; box-shadow: 0 4px 14px rgba(229, 72, 77, .28);
+  font-size: .875rem; font-weight: 600; background: var(--accent); color: #fff; white-space: nowrap; box-shadow: 0 4px 14px rgba(229, 72, 77, .28);
 }
 .btn:hover { background: var(--accent-deep); }
 
@@ -60,71 +62,71 @@ button, select { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--line);
 }
 .hero-inner { max-width: 1010px; margin: 0 auto; padding: 56px 24px 44px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; }
-.hero-inner h1 { font-size: clamp(30px, 4.4vw, 42px); line-height: 1.22; letter-spacing: -.03em; margin: 0 0 14px; }
+.hero-inner h1 { font-size: clamp(1.875rem, 4.4vw, 2.625rem); line-height: 1.22; letter-spacing: -.03em; margin: 0 0 14px; }
 .hero-inner h1 em { font-style: normal; color: var(--accent); }
-.hero-inner .lead { font-size: 17px; color: var(--ink-2); margin: 0 0 22px; }
+.hero-inner .lead { font-size: 1.0625rem; color: var(--ink-2); margin: 0 0 22px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { font-size: 13px; font-weight: 600; padding: 5px 11px; border-radius: 99px; background: rgba(255,255,255,.75); border: 1px solid var(--line); color: var(--ink-2); }
+.chip { font-size: .8125rem; font-weight: 600; padding: 5px 11px; border-radius: 99px; background: rgba(255,255,255,.75); border: 1px solid var(--line); color: var(--ink-2); }
 .chip::before { content: "✓ "; color: var(--accent); }
 .hero-art { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px 20px 14px; box-shadow: var(--shadow); }
 .hero-art svg { display: block; width: 100%; height: auto; }
-.hero-art figcaption { text-align: center; color: var(--muted); font-size: 13.5px; margin-top: 8px; }
+.hero-art figcaption { text-align: center; color: var(--muted); font-size: .84375rem; margin-top: 8px; }
 
 /* layout */
 .layout { display: grid; grid-template-columns: 200px minmax(0, 760px); gap: 56px; justify-content: center; padding: 44px 24px 96px; }
-.toc { position: sticky; top: 96px; align-self: start; font-size: 14px; }
-.toc b { display: block; font-size: 12px; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
+.toc { position: sticky; top: 96px; align-self: start; font-size: .875rem; }
+.toc b { display: block; font-size: .75rem; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
 .toc a { display: block; padding: 5px 0 5px 12px; border-left: 2px solid var(--line); color: var(--ink-2); text-decoration: none; }
 .toc a:hover { color: var(--accent); border-color: var(--accent); }
 
-article h2 { font-size: 24px; letter-spacing: -.02em; line-height: 1.35; margin: 60px 0 14px; display: flex; align-items: center; gap: 12px; }
+article h2 { font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.35; margin: 60px 0 14px; display: flex; align-items: center; gap: 12px; }
 article h2:first-of-type { margin-top: 0; }
 article h2 .n {
   flex: none; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center;
-  background: var(--accent-soft); color: var(--accent-deep); font-size: 15px; font-weight: 800;
+  background: var(--accent-soft); color: var(--accent-deep); font-size: .9375rem; font-weight: 800;
 }
-article h3 { font-size: 17px; margin: 28px 0 6px; }
+article h3 { font-size: 1.0625rem; margin: 28px 0 6px; }
 article p { margin: 0 0 14px; }
 article ul, article ol { padding-left: 22px; margin: 0 0 14px; }
 article li { margin: 4px 0; }
 .muted { color: var(--muted); }
 
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 8px; padding: 0; list-style: none; counter-reset: s; }
-.steps li { margin: 0; padding: 18px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); counter-increment: s; font-size: 14.5px; line-height: 1.55; }
-.steps li::before { content: counter(s); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; margin-bottom: 8px; }
-.steps li b { display: block; font-size: 16px; margin-bottom: 2px; }
+.steps li { margin: 0; padding: 18px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); counter-increment: s; font-size: .90625rem; line-height: 1.55; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: .8125rem; margin-bottom: 8px; }
+.steps li b { display: block; font-size: 1rem; margin-bottom: 2px; }
 
 .ui { display: inline-block; padding: 0 7px; border-radius: 6px; font-size: .9em; font-weight: 600; line-height: 1.7; background: var(--surface); border: 1px solid var(--line-strong); white-space: nowrap; }
 code { font: 500 .88em/1 ui-monospace, Consolas, monospace; padding: 2px 5px; border-radius: 5px; background: var(--surface-2); word-break: break-all; }
-kbd { font: 600 12.5px/1 ui-monospace, Consolas, monospace; padding: 3px 7px; border-radius: 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); white-space: nowrap; }
-.note { padding: 14px 16px; border-radius: 12px; margin: 18px 0; font-size: 15px; background: var(--accent-tint); border: 1px solid #f7d5d3; border-left: 4px solid var(--accent); }
+kbd { font: 600 .78125rem/1 ui-monospace, Consolas, monospace; padding: 3px 7px; border-radius: 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); white-space: nowrap; }
+.note { padding: 14px 16px; border-radius: 12px; margin: 18px 0; font-size: .9375rem; background: var(--accent-tint); border: 1px solid #f7d5d3; border-left: 4px solid var(--accent); }
 .note.tip { background: var(--gold-soft); border-color: #f2dfae; border-left-color: var(--gold); }
 
 .options { display: grid; gap: 10px; margin: 16px 0; }
 .option { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: start; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
 .option .ui { justify-self: start; }
-.option p { margin: 0; font-size: 15px; }
+.option p { margin: 0; font-size: .9375rem; }
 
 .figure { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
 .figure figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 14px 10px; box-shadow: var(--shadow); }
 .figure svg { display: block; width: 100%; height: auto; }
-.figure figcaption { font-size: 13.5px; color: var(--ink-2); text-align: center; margin-top: 8px; line-height: 1.5; }
+.figure figcaption { font-size: .84375rem; color: var(--ink-2); text-align: center; margin-top: 8px; line-height: 1.5; }
 
-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: .9375rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font-size: 13px; color: var(--muted); font-weight: 600; background: var(--surface-2); }
+th { font-size: .8125rem; color: var(--muted); font-weight: 600; background: var(--surface-2); }
 tr:last-child td { border-bottom: 0; }
 td:first-child { white-space: nowrap; }
 
 details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 8px 0; }
 summary { cursor: pointer; padding: 13px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; color: var(--accent); font-weight: 400; font-size: 20px; line-height: 1; }
+summary::after { content: "+"; color: var(--accent); font-weight: 400; font-size: 1.25rem; line-height: 1; }
 details[open] summary::after { content: "−"; }
-details > div { padding: 0 16px 14px; color: var(--ink-2); font-size: 15px; }
+details > div { padding: 0 16px 14px; color: var(--ink-2); font-size: .9375rem; }
 details > div p:last-child { margin-bottom: 0; }
 
-footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 40px; }
+footer { text-align: center; color: var(--muted); font-size: .8125rem; padding: 0 16px 40px; }
 article.doc { display: none; }
 article.doc.active { display: block; }
 .docwrap { min-width: 0; }
@@ -138,9 +140,15 @@ article.doc.active { display: block; }
   .option { grid-template-columns: 1fr; gap: 6px; }
   .topbar { padding: 12px 14px; gap: 8px; }
   .brand small { display: none; }
-  .topbar .btn { padding: 7px 10px; font-size: 13px; }
-  .lang { padding: 6px 26px 6px 9px; font-size: 13px; background-position: right 8px center; }
+  .topbar .btn { padding: 7px 10px; font-size: .8125rem; }
+  .lang { padding: 6px 26px 6px 9px; font-size: .8125rem; background-position: right 8px center; }
   td:first-child { white-space: normal; }
+  /* 큰 글꼴에서도 페이지가 가로로 넘치지 않게: 칸 안 단추 글자도 줄바꿈, 그래도 넓으면 표 안에서만 밀기 */
+  td .ui { white-space: normal; }
+  table { display: block; overflow-x: auto; }
+}
+@media (max-width: 480px) {
+  th, td { padding: 8px 9px; }
 }
 </style>
 </head>
@@ -209,7 +217,7 @@ article.doc.active { display: block; }
       <li>작업 중에 다른 PDF를 끌어다 놓거나 왼쪽 위 <span class="ui">바꾸기</span>를 누르면 파일이 바뀌어요.</li>
       <li>화면 언어는 오른쪽 위에서 한국어·English·中文·日本語 중에 고를 수 있어요.</li>
     </ul>
-    <div class="note"><b>파일은 업로드되지 않아요.</b> 모든 처리는 내 컴퓨터의 브라우저 안에서 해요. 처음 열 때 PDF를 읽는 프로그램(pdf.js, pdf-lib)을 인터넷에서 받아오기 때문에 인터넷 연결만 있으면 돼요.</div>
+    <div class="note"><b>파일은 업로드되지 않아요.</b> 모든 처리는 내 컴퓨터의 브라우저 안에서 해요. <span data-sync="lib-note">처음 열 때 PDF를 읽는 프로그램(pdf.js, pdf-lib)을 인터넷에서 받아오기 때문에 인터넷 연결만 있으면 돼요.</span></div>
 
     <h2 id="ko-check"><span class="n">2</span>나눌 쪽 확인하기</h2>
     <p>파일을 열면 쪽마다 미리보기 카드가 생겨요. 도구가 <b>가로로 긴 쪽은 펼침면</b>으로 보고 나누기로, <b>세로로 긴 쪽</b>(앞표지, 뒤표지 같은)은 통째로 설정해 둬요.</p>
@@ -330,7 +338,7 @@ article.doc.active { display: block; }
       <li>While working, drop another PDF or press <span class="ui">Change</span> at the top left to switch files.</li>
       <li>The interface language (한국어 · English · 中文 · 日本語) can be changed at the top right.</li>
     </ul>
-    <div class="note"><b>Your file is never uploaded.</b> All processing happens inside the browser on your own computer. An internet connection is only needed the first time, to fetch the PDF libraries (pdf.js and pdf-lib).</div>
+    <div class="note"><b>Your file is never uploaded.</b> All processing happens inside the browser on your own computer. <span data-sync="lib-note">An internet connection is only needed the first time, to fetch the PDF libraries (pdf.js and pdf-lib).</span></div>
 
     <h2 id="en-check"><span class="n">2</span>Which pages to split</h2>
     <p>Each page gets a preview card. The tool treats <b>landscape pages as spreads</b> and marks them for splitting; <b>portrait pages</b> (front and back covers, for example) are kept whole.</p>
@@ -451,7 +459,7 @@ article.doc.active { display: block; }
       <li>处理过程中拖入另一个 PDF，或点击左上角的 <span class="ui">更换</span>，即可切换文件。</li>
       <li>界面语言（한국어 · English · 中文 · 日本語）可在右上角切换。</li>
     </ul>
-    <div class="note"><b>文件不会被上传。</b>所有处理都在你自己电脑的浏览器里完成。只有第一次打开时需要联网下载 PDF 库（pdf.js、pdf-lib）。</div>
+    <div class="note"><b>文件不会被上传。</b>所有处理都在你自己电脑的浏览器里完成。<span data-sync="lib-note">只有第一次打开时需要联网下载 PDF 库（pdf.js、pdf-lib）。</span></div>
 
     <h2 id="zh-check"><span class="n">2</span>确认要拆分的页</h2>
     <p>打开文件后每页都有一张预览卡片。工具把<b>横向页视为跨页</b>并标记为拆分，<b>纵向页</b>（如封面、封底）保持整页。</p>
@@ -572,7 +580,7 @@ article.doc.active { display: block; }
       <li>作業中に別の PDF をドロップするか、左上の <span class="ui">変更</span> を押すとファイルが切り替わります。</li>
       <li>表示言語（한국어 · English · 中文 · 日本語）は右上で選べます。</li>
     </ul>
-    <div class="note"><b>ファイルはアップロードされません。</b>すべての処理は自分の PC のブラウザ内で行います。最初に開くとき PDF ライブラリ（pdf.js、pdf-lib）をダウンロードするため、その時だけインターネット接続が必要です。</div>
+    <div class="note"><b>ファイルはアップロードされません。</b>すべての処理は自分の PC のブラウザ内で行います。<span data-sync="lib-note">最初に開くとき PDF ライブラリ（pdf.js、pdf-lib）をダウンロードするため、その時だけインターネット接続が必要です。</span></div>
 
     <h2 id="ja-check"><span class="n">2</span>分割するページを確認する</h2>
     <p>ファイルを開くとページごとにプレビューカードが並びます。ツールは<b>横長のページを見開き</b>とみなして分割に、<b>縦長のページ</b>（表紙・裏表紙など）はそのままに設定します。</p>

@@ -54,7 +54,7 @@ html, body { margin: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 15px/1.55 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  font: .9375rem/1.55 "Pretendard Variable", Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
@@ -73,7 +73,9 @@ button { cursor: pointer; }
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
+  flex-wrap: wrap; row-gap: 8px;   /* 브라우저 글꼴을 크게 해도 가로로 넘치지 않게 */
 }
+.topbar .link-btn { margin-left: auto; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
 .brand svg { width: 26px; height: 26px; flex: none; }
 .brand small { font-weight: 500; color: var(--muted); margin-left: 2px; }
@@ -81,21 +83,21 @@ button { cursor: pointer; }
 .link-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 12px; border-radius: 9px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink-2); text-decoration: none; font-size: 14px; white-space: nowrap;
+  background: var(--surface); color: var(--ink-2); text-decoration: none; font-size: .875rem; white-space: nowrap;
 }
 .link-btn:hover { border-color: var(--line-strong); color: var(--ink); }
 .lang {
   appearance: none; -webkit-appearance: none;
   padding: 7px 30px 7px 12px; border-radius: 9px; border: 1px solid var(--line);
   background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8880' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color: var(--ink-2); font-size: 14px; cursor: pointer;
+  color: var(--ink-2); font-size: .875rem; cursor: pointer;
 }
 .lang:hover { border-color: var(--line-strong); color: var(--ink); }
 
 /* ── empty state ── */
 .empty { max-width: 760px; margin: 0 auto; padding: 72px 20px 48px; text-align: center; }
-.empty h1 { font-size: clamp(28px, 4.2vw, 40px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 12px; }
-.empty .lead { color: var(--ink-2); margin: 0 0 36px; font-size: 16px; }
+.empty h1 { font-size: clamp(1.75rem, 4.2vw, 2.5rem); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 12px; }
+.empty .lead { color: var(--ink-2); margin: 0 0 36px; font-size: 1rem; }
 .drop {
   position: relative; display: grid; place-items: center; gap: 14px;
   padding: 56px 24px; border-radius: 22px;
@@ -106,26 +108,26 @@ button { cursor: pointer; }
 .drop:hover { border-color: var(--ink-2); }
 .drop.over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--surface)); transform: scale(1.005); }
 .drop-art { width: 132px; height: 84px; }
-.drop strong { font-size: 18px; }
-.drop span { color: var(--muted); font-size: 14px; }
+.drop strong { font-size: 1.125rem; }
+.drop span { color: var(--muted); font-size: .875rem; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 9px 16px; border-radius: 10px; border: 1px solid var(--line-strong);
-  background: var(--surface); font-weight: 600; font-size: 14px; white-space: nowrap;
+  background: var(--surface); font-weight: 600; font-size: .875rem; white-space: nowrap;
   transition: background .12s, border-color .12s, opacity .12s;
 }
 .btn:hover { border-color: var(--ink-2); }
 .btn:disabled { opacity: .45; cursor: default; }
 .btn.primary { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
 .btn.primary:hover { opacity: .9; }
-.btn.big { width: 100%; padding: 13px 16px; font-size: 15px; border-radius: 12px; }
+.btn.big { width: 100%; padding: 13px 16px; font-size: .9375rem; border-radius: 12px; }
 .btn.ghost { border-color: transparent; background: transparent; color: var(--ink-2); padding: 7px 10px; }
 .btn.ghost:hover { background: var(--surface-2); }
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 28px; text-align: left; }
 .feature { padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
-.feature b { display: block; font-size: 14px; margin-bottom: 2px; }
-.feature p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-.loading { margin-top: 20px; color: var(--ink-2); font-size: 14px; }
+.feature b { display: block; font-size: .875rem; margin-bottom: 2px; }
+.feature p { margin: 0; color: var(--muted); font-size: .8125rem; line-height: 1.5; }
+.loading { margin-top: 20px; color: var(--ink-2); font-size: .875rem; }
 .loading .bar { height: 4px; margin: 10px auto 0; max-width: 320px; }
 
 /* ── workspace ── */
@@ -138,22 +140,22 @@ button { cursor: pointer; }
 }
 .group { padding: 14px 0; border-bottom: 1px solid var(--line); }
 .group:last-of-type { border-bottom: 0; }
-.label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 9px; }
+.label { display: flex; justify-content: space-between; align-items: baseline; font-size: .8125rem; font-weight: 600; color: var(--ink-2); margin-bottom: 9px; }
 .label output { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 700; }
-.hint { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 8px 0 0; }
+.hint { color: var(--muted); font-size: .78125rem; line-height: 1.5; margin: 8px 0 0; }
 .file-name { font-weight: 700; word-break: break-all; line-height: 1.35; }
-.file-meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.file-meta { color: var(--muted); font-size: .8125rem; margin-top: 2px; }
 .file-row { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
 
 .seg { display: flex; padding: 3px; background: var(--surface-2); border-radius: 10px; gap: 2px; }
 .seg button {
   flex: 1; border: 0; background: transparent; padding: 7px 8px; border-radius: 8px;
-  font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap;
+  font-size: .8125rem; font-weight: 600; color: var(--muted); white-space: nowrap;
 }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
 .seg button:hover:not([aria-pressed="true"]) { color: var(--ink); }
 .row { display: flex; gap: 6px; margin-top: 10px; }
-.row .btn { flex: 1; padding: 7px 10px; font-size: 13px; }
+.row .btn { flex: 1; padding: 7px 10px; font-size: .8125rem; white-space: normal; }
 
 input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; }
 input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: var(--line-strong); }
@@ -161,13 +163,13 @@ input[type=range]::-moz-range-track { height: 4px; border-radius: 4px; backgroun
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--surface); border: 2px solid var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
 input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--surface); border: 2px solid var(--ink); }
 
-.summary { display: flex; align-items: center; justify-content: space-between; margin: 16px 0 12px; font-size: 14px; color: var(--ink-2); }
+.summary { display: flex; align-items: center; justify-content: space-between; margin: 16px 0 12px; font-size: .875rem; color: var(--ink-2); }
 .summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .summary .arrow { color: var(--muted); }
 .bar { height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin-top: 10px; }
 .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .15s; }
 .done {
-  margin-top: 12px; padding: 12px; border-radius: 12px; font-size: 13.5px;
+  margin-top: 12px; padding: 12px; border-radius: 12px; font-size: .84375rem;
   background: color-mix(in srgb, var(--ok) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent);
 }
 .done b { color: var(--ok); }
@@ -175,8 +177,8 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
 
 /* ── page grid ── */
 .grid-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 14px; }
-.grid-head h2 { margin: 0; font-size: 17px; letter-spacing: -.01em; }
-.legend { display: flex; gap: 14px; color: var(--muted); font-size: 12.5px; flex-wrap: wrap; }
+.grid-head h2 { margin: 0; font-size: 1.0625rem; letter-spacing: -.01em; }
+.legend { display: flex; gap: 14px; color: var(--muted); font-size: .78125rem; flex-wrap: wrap; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 2px; background: var(--accent); display: inline-block; }
 .legend i.band { height: 10px; width: 10px; border-radius: 2px; background: var(--accent-soft); }
@@ -197,7 +199,9 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
   position: relative; aspect-ratio: var(--ar);
   width: min(calc(100cqw - 24px), calc((100cqh - 24px) * var(--ar)));
   background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.14);
-  user-select: none; touch-action: none;
+  user-select: none;
+  /* 휴대폰에서 그림 위를 쓸어도 화면이 내려가게. 손가락 끌기를 가로채는 건 분할선 손잡이(.cut)뿐 */
+  touch-action: pan-y pinch-zoom;
 }
 .thumb canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity .2s; }
 .thumb.ready canvas { opacity: 1; }
@@ -213,7 +217,7 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
 .band { top: 0; bottom: 0; pointer-events: none; }
 .band.overlap { background: var(--accent-soft); }
 .band.gap { background: repeating-linear-gradient(135deg, var(--cut) 0 3px, transparent 3px 7px); }
-.cut { top: -6px; bottom: -6px; width: 22px; margin-left: -11px; cursor: ew-resize; z-index: 2; }
+.cut { top: -6px; bottom: -6px; width: 22px; margin-left: -11px; cursor: ew-resize; z-index: 2; touch-action: none; }
 .cut::before { content: ""; position: absolute; left: 10px; top: 6px; bottom: 6px; width: 2px; background: var(--accent); box-shadow: 0 0 0 1px rgba(255,255,255,.55); }
 .cut::after {
   content: ""; position: absolute; left: 4px; top: 50%; width: 14px; height: 26px; margin-top: -13px;
@@ -225,17 +229,17 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
 .tag {
   top: 8px; transform: translateX(-50%);
   min-width: 26px; padding: 1px 7px; border-radius: 99px; text-align: center;
-  background: rgba(29,29,27,.82); color: #fff; font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: rgba(29,29,27,.82); color: #fff; font-size: .71875rem; font-weight: 700; font-variant-numeric: tabular-nums;
   pointer-events: none; z-index: 1;
 }
-.skip-mark { inset: 0; display: grid; place-items: center; background: rgba(245,244,240,.72); color: #4a4944; font-weight: 700; font-size: 13px; }
+.skip-mark { inset: 0; display: grid; place-items: center; background: rgba(245,244,240,.72); color: #4a4944; font-weight: 700; font-size: .8125rem; }
 .card.mode-skip .thumb canvas { filter: grayscale(1); }
 
 .card-foot { display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 14px; border-top: 1px solid var(--line); }
-.pno { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 34px; }
-.pno em { display: block; font-style: normal; font-weight: 500; color: var(--accent); font-size: 11px; line-height: 1.2; }
+.pno { font-size: .8125rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 34px; }
+.pno em { display: block; font-style: normal; font-weight: 500; color: var(--accent); font-size: .6875rem; line-height: 1.2; }
 .card-foot .seg { flex: 1; padding: 2px; }
-.card-foot .seg button { padding: 5px 4px; font-size: 12px; }
+.card-foot .seg button { padding: 5px 4px; font-size: .75rem; }
 .icon-btn {
   width: 32px; height: 32px; display: grid; place-items: center; flex: none;
   border: 1px solid var(--line); background: var(--surface); border-radius: 9px; color: var(--ink-2);
@@ -253,22 +257,22 @@ dialog.viewer[open] { display: grid; grid-template-rows: auto 1fr auto; }
 dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(3px); }
 .v-head, .v-foot { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
 .v-head { border-bottom: 1px solid var(--line); }
-.v-foot { border-top: 1px solid var(--line); justify-content: space-between; font-size: 13.5px; color: var(--ink-2); }
+.v-foot { border-top: 1px solid var(--line); justify-content: space-between; font-size: .84375rem; color: var(--ink-2); }
 .v-head .title { font-weight: 700; }
 .v-head .seg { width: 260px; }
 .v-head .spacer { flex: 1; }
 .v-stage { container-type: size; display: grid; place-items: center; background: var(--surface-2); min-height: 0; }
 .v-stage .thumb { width: min(calc(100cqw - 48px), calc((100cqh - 48px) * var(--ar))); }
-.v-stage .tag { font-size: 13px; padding: 2px 10px; top: 12px; }
+.v-stage .tag { font-size: .8125rem; padding: 2px 10px; top: 12px; }
 .v-info { font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.kbd { font: 600 11.5px/1 ui-monospace, Consolas, monospace; padding: 3px 6px; border-radius: 5px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink-2); }
-.pill { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+.kbd { font: 600 .71875rem/1 ui-monospace, Consolas, monospace; padding: 3px 6px; border-radius: 5px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink-2); }
+.pill { font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
 
 /* ── toast ── */
 .toast {
   position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; z-index: 50;
   padding: 11px 16px; border-radius: 12px; background: var(--primary); color: var(--primary-ink);
-  font-size: 14px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,.25); pointer-events: none;
+  font-size: .875rem; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,.25); pointer-events: none;
   transition: opacity .2s, transform .2s; max-width: calc(100vw - 32px);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -276,10 +280,10 @@ dialog.viewer::backdrop { background: rgba(15,15,14,.55); backdrop-filter: blur(
 .drag-veil {
   position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; pointer-events: none;
   background: color-mix(in srgb, var(--bg) 80%, transparent); border: 3px dashed var(--accent);
-  font-size: 20px; font-weight: 700;
+  font-size: 1.25rem; font-weight: 700;
 }
 
-.site-foot { max-width: 760px; margin: 0 auto; padding: 8px 20px 32px; text-align: center; font-size: 13px; color: var(--muted); }
+.site-foot { max-width: 760px; margin: 0 auto; padding: 8px 20px 32px; text-align: center; font-size: .8125rem; color: var(--muted); }
 .site-foot a { color: var(--ink-2); }
 
 @media (max-width: 880px) {
@@ -473,7 +477,7 @@ const I18N = {
     sumSrc: '원본', sumOut: '결과', pagesUnit: '쪽', build: 'PDF 만들기',
     preview: '미리보기', legendLine: '분할선', legendBand: '겹치는 부분', legendDbl: '선 더블클릭 = 되돌리기',
     modeSplit: '나누기', modeWhole: '통째로', modeSkip: '빼기', pageN: '{n}쪽', zoomN: '{n}쪽 크게 보기', zoomTitle: '크게 보기', close: '닫기',
-    prev: '← 이전 쪽', next: '다음 쪽 →', skipMark: '결과에서 빠짐', cutLabel: '분할선',
+    prev: '← 이전 쪽', next: '다음 쪽 →', skipMark: '결과에서 빠짐', cutLabel: '{n}쪽 분할선', modeAria: '{n}쪽 {m}',
     vTitle: '{i}쪽 / {n}쪽', vLine: '분할선 {p}', vCustom: '이 쪽만 조정됨', vReset: '되돌리기',
     vHint: '· 선을 끌거나 <span class="kbd">Tab</span> 후 <span class="kbd">←</span><span class="kbd">→</span>',
     vWhole: '이 쪽은 나누지 않고 그대로 넣어요', vSkip: '이 쪽은 결과에 넣지 않아요',
@@ -510,7 +514,7 @@ const I18N = {
     sumSrc: 'Source', sumOut: 'Result', pagesUnit: ' pages', build: 'Create PDF',
     preview: 'Preview', legendLine: 'split line', legendBand: 'overlap', legendDbl: 'double-click line = reset',
     modeSplit: 'Split', modeWhole: 'Whole', modeSkip: 'Skip', pageN: 'p. {n}', zoomN: 'Enlarge page {n}', zoomTitle: 'Enlarge', close: 'Close',
-    prev: '← Previous', next: 'Next →', skipMark: 'Skipped', cutLabel: 'Split line',
+    prev: '← Previous', next: 'Next →', skipMark: 'Skipped', cutLabel: 'Split line, page {n}', modeAria: '{m} page {n}',
     vTitle: 'Page {i} of {n}', vLine: 'Split at {p}', vCustom: 'Adjusted on this page', vReset: 'Reset',
     vHint: '· drag the line, or press <span class="kbd">Tab</span> then <span class="kbd">←</span><span class="kbd">→</span>',
     vWhole: 'This page is kept whole', vSkip: 'This page is left out of the result',
@@ -547,7 +551,7 @@ const I18N = {
     sumSrc: '原文件', sumOut: '结果', pagesUnit: ' 页', build: '生成 PDF',
     preview: '预览', legendLine: '分割线', legendBand: '重叠部分', legendDbl: '双击分割线 = 还原',
     modeSplit: '拆分', modeWhole: '整页', modeSkip: '排除', pageN: '第 {n} 页', zoomN: '放大第 {n} 页', zoomTitle: '放大查看', close: '关闭',
-    prev: '← 上一页', next: '下一页 →', skipMark: '不计入结果', cutLabel: '分割线',
+    prev: '← 上一页', next: '下一页 →', skipMark: '不计入结果', cutLabel: '第 {n} 页分割线', modeAria: '第 {n} 页 {m}',
     vTitle: '第 {i} 页 / 共 {n} 页', vLine: '分割线 {p}', vCustom: '仅此页已调整', vReset: '还原',
     vHint: '· 拖动分割线，或按 <span class="kbd">Tab</span> 后用 <span class="kbd">←</span><span class="kbd">→</span>',
     vWhole: '此页不拆分，整页保留', vSkip: '此页不计入结果',
@@ -584,7 +588,7 @@ const I18N = {
     sumSrc: '元', sumOut: '結果', pagesUnit: ' ページ', build: 'PDF を作成',
     preview: 'プレビュー', legendLine: '分割線', legendBand: '重なり', legendDbl: '線をダブルクリック = 戻す',
     modeSplit: '分割', modeWhole: 'そのまま', modeSkip: '除外', pageN: '{n} ページ', zoomN: '{n} ページを拡大', zoomTitle: '拡大表示', close: '閉じる',
-    prev: '← 前のページ', next: '次のページ →', skipMark: '結果に含めない', cutLabel: '分割線',
+    prev: '← 前のページ', next: '次のページ →', skipMark: '結果に含めない', cutLabel: '{n} ページの分割線', modeAria: '{n} ページ {m}',
     vTitle: '{i} / {n} ページ', vLine: '分割線 {p}', vCustom: 'このページのみ調整済み', vReset: '戻す',
     vHint: '· 線をドラッグ、または <span class="kbd">Tab</span> のあと <span class="kbd">←</span><span class="kbd">→</span>',
     vWhole: 'このページは分割せずそのまま入れます', vSkip: 'このページは結果に含めません',
@@ -652,7 +656,8 @@ applyLang(detectLang());
 document.getElementById('lang').addEventListener('change', e => {
   store.set(LANG_KEY, e.target.value);
   applyLang(e.target.value);
-  refresh({ keepDone: true });   // 언어만 바뀐 것이므로 만들어 둔 결과 링크는 그대로 둔다
+  refresh({ keepDone: true });   // 언어만 바뀐 것이므로 만들어 둔 결과 링크는 그대로 두고 글만 새 언어로
+  if (!el.done.hidden) paintDone();
 });
 
 if (!window.pdfjsLib || !window.PDFLib) {
@@ -665,7 +670,8 @@ const S = {
   name: '', size: 0, bytes: null, doc: null,
   pages: [],          // { w, h, mode: 'split'|'whole'|'skip', pos: number|null }
   pos: 0.5, overlap: 0, dir: 'ltr',
-  gen: 0, busy: false, detecting: false, outUrl: null,
+  gen: 0, busy: false, outUrl: null, result: null,
+  detecting: false,   // 찾기 작업 번호(멈추면 false)
 };
 
 const el = {
@@ -755,6 +761,8 @@ function ensureOverlay(thumb) {
   const band = document.createElement('div'); band.className = 'band';
   const cut = document.createElement('div'); cut.className = 'cut'; cut.tabIndex = 0;
   cut.setAttribute('role', 'slider');
+  cut.setAttribute('aria-valuemin', POS_MIN * 100);
+  cut.setAttribute('aria-valuemax', POS_MAX * 100);
   const tagA = document.createElement('div'); tagA.className = 'tag';
   const tagB = document.createElement('div'); tagB.className = 'tag';
   const skip = document.createElement('div'); skip.className = 'skip-mark';
@@ -762,13 +770,14 @@ function ensureOverlay(thumb) {
   return (thumb._ov = { band, cut, tagA, tagB, skip });
 }
 
-function paintOverlay(thumb, p, nums) {
+// i: 원본 쪽 번호(0부터) — 화면 읽기 프로그램이 「3쪽 분할선」처럼 어느 쪽인지 읽게
+function paintOverlay(thumb, p, nums, i) {
   const ov = ensureOverlay(thumb);
   thumb.style.setProperty('--ar', p.w / p.h);
   const split = p.mode === 'split';
   const s = effPos(p), g = S.overlap;
   ov.cut.hidden = ov.band.hidden = !split;
-  ov.cut.setAttribute('aria-label', t('cutLabel'));
+  ov.cut.setAttribute('aria-label', t('cutLabel', { n: i + 1 }));
   ov.skip.hidden = p.mode !== 'skip';
   ov.skip.textContent = t('skipMark');
   ov.tagA.hidden = p.mode === 'skip';
@@ -776,6 +785,7 @@ function paintOverlay(thumb, p, nums) {
   if (split) {
     ov.cut.style.left = (s * 100) + '%';
     ov.cut.setAttribute('aria-valuenow', (s * 100).toFixed(1));
+    ov.cut.setAttribute('aria-valuetext', fmtPct(s));
     const a = Math.min(s - g, s + g), b = Math.max(s - g, s + g);
     ov.band.style.left = (a * 100) + '%';
     ov.band.style.width = ((b - a) * 100) + '%';
@@ -925,6 +935,12 @@ function numbering() {
 }
 
 const MODE_KEYS = { split: 'modeSplit', whole: 'modeWhole', skip: 'modeSkip' };
+// 쪽마다 같은 「나누기/통째로/빼기」가 되풀이되므로 읽기 이름에는 쪽 번호를 붙인다
+function paintModeBtn(b, i) {
+  const m = t(MODE_KEYS[b.dataset.mode]);
+  b.textContent = m;
+  b.setAttribute('aria-label', t('modeAria', { n: i + 1, m }));
+}
 
 function refresh({ keepDone = false } = {}) {
   if (el.workspace.hidden) return;
@@ -935,11 +951,11 @@ function refresh({ keepDone = false } = {}) {
     const card = el.grid.children[i];
     if (!card) return;
     card.className = 'card mode-' + p.mode;
-    paintOverlay(card._thumb, p, nums[i]);
+    paintOverlay(card._thumb, p, nums[i], i);
     card._pno.textContent = t('pageN', { n: i + 1 });
     card._zoom.setAttribute('aria-label', t('zoomN', { n: i + 1 }));
     card._zoom.title = t('zoomTitle');
-    card._segBtns.forEach(b => { b.setAttribute('aria-pressed', b.dataset.mode === p.mode); b.textContent = t(MODE_KEYS[b.dataset.mode]); });
+    card._segBtns.forEach(b => { b.setAttribute('aria-pressed', b.dataset.mode === p.mode); paintModeBtn(b, i); });
     const custom = p.mode === 'split' && p.pos != null;
     card._badge.textContent = custom ? fmtPct(p.pos) : '';
     if (p.pos != null) overrides++;
@@ -953,6 +969,8 @@ function refresh({ keepDone = false } = {}) {
   if (!S.detecting) el.btnAuto.textContent = t('auto');
   el.posOut.textContent = fmtPct(S.pos);
   el.ovOut.textContent = (S.overlap > 0 ? '+' : S.overlap < 0 ? '−' : '') + Math.abs(S.overlap * 100).toFixed(1) + '%';
+  el.pos.setAttribute('aria-valuetext', el.posOut.textContent);
+  el.overlap.setAttribute('aria-valuetext', el.ovOut.textContent);
   el.btnBuild.disabled = total === 0 || S.busy;
 
   // 한꺼번에 고르기 — 현재 상태와 일치하는 버튼 표시
@@ -989,16 +1007,29 @@ el.btnClear.addEventListener('click', () => { S.pages.forEach(p => p.pos = null)
 el.btnOther.addEventListener('click', () => el.file.click());
 
 /* ───────── auto detect gutter ───────── */
+// 멈추라고 해도 지금 그리는 쪽이 끝나야 작업이 끝난다. 그 사이 다시 누르면 두 작업이 함께 돌아
+// 진행 숫자가 섞였다 — 앞 작업이 정말 끝난 것을 확인한 뒤에 새로 시작한다.
+let detectJob = null, detectSeq = 0;
 el.btnAuto.addEventListener('click', async () => {
-  if (S.detecting) { S.detecting = false; return; }
+  if (S.detecting) { S.detecting = false; el.btnAuto.disabled = true; return; }
+  if (detectJob) await detectJob;   // 다른 파일을 열어 멈춘 앞 작업
+  if (S.detecting) return;          // 기다리는 사이 다른 누름이 먼저 시작함
   const targets = S.pages.map((p, i) => i).filter(i => S.pages[i].mode === 'split');
   if (!targets.length) { toast(t('tNoSplit')); return; }
-  S.detecting = true;
+  const run = S.detecting = ++detectSeq;
+  detectJob = detectAll(run, targets);
+  try { await detectJob; } finally {
+    detectJob = null;
+    el.btnAuto.disabled = false;
+  }
+});
+
+async function detectAll(run, targets) {
   const gen = S.gen;
   let found = 0, done = 0;
   const unsure = [];
   for (const i of targets) {
-    if (!S.detecting || gen !== S.gen) break;
+    if (S.detecting !== run || gen !== S.gen) break;
     el.btnAuto.textContent = t('autoBusy', { done, total: targets.length });
     try {
       const f = await detectGutter(i);
@@ -1010,14 +1041,14 @@ el.btnAuto.addEventListener('click', async () => {
     done++;
     if (done % 4 === 0) refresh();
   }
-  S.detecting = false;
+  if (S.detecting === run) S.detecting = false;
   el.btnAuto.textContent = t('auto');
   if (gen !== S.gen) return;
   refresh();
   const list = unsure.slice(0, 8).join(', ') + (unsure.length > 8 ? ' …' : '');
   const msg = [found ? t('tFound', { n: found }) : '', unsure.length ? t('tUnsure', { list }) : ''].filter(Boolean).join(' ');
   toast(msg || t('tNotFound'), unsure.length ? 6000 : 3600);
-});
+}
 
 async function detectGutter(i) {
   const page = await S.doc.getPage(i + 1);
@@ -1257,10 +1288,7 @@ async function build() {
       if (k % 25 === 0) { setProg(0.2 + 0.5 * (k / keep.length), t('progSplit', { i: k + 1, n: keep.length })); await tick(); }
     }
 
-    const title = src.getTitle();
-    if (title) out.setTitle(title);
-    const author = src.getAuthor();
-    if (author) out.setAuthor(author);
+    // 원본의 제목·저자 등 문서 정보는 옮기지 않는다(새 문서라 비어 있음) — 만든 프로그램 이름만
     out.setProducer(t('producer'));
 
     setProg(0.75, t('progSave')); await tick();
@@ -1275,12 +1303,8 @@ async function build() {
     a.href = S.outUrl; a.download = outName;
     document.body.appendChild(a); a.click(); a.remove();
 
-    el.done.innerHTML = '';
-    const b = document.createElement('b'); b.textContent = t('done');
-    const info = document.createTextNode(t('doneInfo', { n: out.getPageCount(), size: fmtSize(blob.size) }));
-    const again = document.createElement('a'); again.href = S.outUrl; again.download = outName; again.textContent = t('again');
-    const view = document.createElement('a'); view.href = S.outUrl; view.target = '_blank'; view.rel = 'noopener'; view.textContent = t('view');
-    el.done.append(b, info, document.createElement('br'), again, document.createTextNode(' · '), view);
+    S.result = { n: out.getPageCount(), size: blob.size, name: outName };
+    paintDone();
     el.done.hidden = false;
   } catch (err) {
     console.error(err);
@@ -1291,6 +1315,18 @@ async function build() {
     el.btnBuild.disabled = false;
     setTimeout(() => { el.buildBarWrap.hidden = true; el.buildBar.style.width = '0%'; }, 700);
   }
+}
+
+// 결과 칸 — 언어를 바꾸면 다시 그린다
+function paintDone() {
+  const r = S.result;
+  if (!r || !S.outUrl) return;
+  el.done.innerHTML = '';
+  const b = document.createElement('b'); b.textContent = t('done');
+  const info = document.createTextNode(t('doneInfo', { n: r.n, size: fmtSize(r.size) }));
+  const again = document.createElement('a'); again.href = S.outUrl; again.download = r.name; again.textContent = t('again');
+  const view = document.createElement('a'); view.href = S.outUrl; view.target = '_blank'; view.rel = 'noopener'; view.textContent = t('view');
+  el.done.append(b, info, document.createElement('br'), again, document.createTextNode(' · '), view);
 }
 
 /* ───────── viewer ───────── */
@@ -1313,9 +1349,9 @@ async function renderViewer() {
 function paintViewer() {
   const p = S.pages[vIndex];
   const nums = numbering()[vIndex];
-  paintOverlay(el.vThumb, p, nums);
+  paintOverlay(el.vThumb, p, nums, vIndex);
   el.vTitle.textContent = t('vTitle', { i: vIndex + 1, n: S.pages.length });
-  el.vSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === p.mode));
+  el.vSeg.querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.mode === p.mode); paintModeBtn(b, vIndex); });
   el.vInfo.innerHTML = '';
   if (p.mode === 'split') {
     const tx = document.createElement('span');
