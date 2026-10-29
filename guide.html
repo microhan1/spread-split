@@ -234,7 +234,7 @@ article.doc.active { display: block; }
     </ul>
     <h3>알아서 찾기: 자동 맞춤</h3>
     <p><span class="ui">자동 맞춤</span>을 누르면 나누기로 표시된 쪽마다 제본선을 찾아서 분할선을 옮겨요. 가운데의 <b>그림자</b>나 글자가 없는 <b>빈 여백</b>을 기준으로 찾아요. 쪽이 많으면 시간이 걸리고, 진행 중에 버튼을 한 번 더 누르면 멈춰요.</p>
-    <div class="note tip">자동 맞춤은 그림이 가운데까지 걸친 쪽이나 여백이 거의 없는 쪽에서 틀릴 수 있어요. 돌린 뒤에 미리보기를 한 번 훑어보고, 이상한 쪽만 손으로 고쳐 주세요.</div>
+    <div class="note tip">자동 맞춤은 그림이 가운데까지 걸친 쪽이나 여백이 거의 없는 쪽에서 틀릴 수 있어요. 그림자가 없는 빽빽한 본문은 가운데 빈 여백의 한가운데를 제본선으로 봐요. 한쪽 쪽이 비어 있으면 위치를 알 수 없어서, 그 쪽은 분할선을 옮기지 않고 알림에 쪽 번호를 보여 줘요. 돌린 뒤에 미리보기를 한 번 훑어보고, 이상한 쪽만 손으로 고쳐 주세요.</div>
 
     <h2 id="ko-overlap"><span class="n">4</span>가운데 겹침</h2>
     <p>분할선 양옆을 얼마나 넣을지 정해요. 슬라이더를 가운데(0%)에 두면 분할선에서 딱 잘라요.</p>
@@ -355,7 +355,7 @@ article.doc.active { display: block; }
     </ul>
     <h3>Automatically: Auto-fit</h3>
     <p><span class="ui">Auto-fit</span> looks for the gutter on every page marked for splitting, using the <b>shadow</b> in the middle or the <b>blank margin</b> between the text blocks. Large files take a while; press the button again to stop.</p>
-    <div class="note tip">Auto-fit can be wrong on pages where a figure crosses the middle or the margins are very small. Skim the previews afterwards and fix odd pages by hand.</div>
+    <div class="note tip">Auto-fit can be wrong on pages where a figure crosses the middle or the margins are very small. On dense text with no gutter shadow, it takes the middle of the blank margin between the pages. If one page of a spread is blank it cannot tell, so it leaves that page's split line where it was and lists the page number in the notice. Skim the previews afterwards and fix odd pages by hand.</div>
 
     <h2 id="en-overlap"><span class="n">4</span>Center overlap</h2>
     <p>Controls how much of the area around the split line is kept. At 0% the pages are cut exactly at the line.</p>
@@ -476,7 +476,7 @@ article.doc.active { display: block; }
     </ul>
     <h3>自动查找：自动对齐</h3>
     <p>点击 <span class="ui">自动对齐</span>，工具会在每个标记为拆分的页上寻找装订线并移动分割线。依据是中间的<b>阴影</b>或没有文字的<b>空白边距</b>。页数多时需要一些时间，进行中再点一次即可停止。</p>
-    <div class="note tip">当图片横跨中间或几乎没有边距时，自动对齐可能出错。运行后请浏览一遍预览，只手动修正异常的页。</div>
+    <div class="note tip">当图片横跨中间或几乎没有边距时，自动对齐可能出错。没有阴影的密集正文，以中间空白边距的正中作为装订线；若跨页中有一页是空白页则无法判断，该页的分割线保持不动，并在提示中列出页码。运行后请浏览一遍预览，只手动修正异常的页。</div>
 
     <h2 id="zh-overlap"><span class="n">4</span>中间重叠</h2>
     <p>决定分割线两侧保留多少。滑块在中间（0%）时正好沿分割线裁开。</p>
@@ -597,7 +597,7 @@ article.doc.active { display: block; }
     </ul>
     <h3>自動で探す：自動調整</h3>
     <p><span class="ui">自動調整</span> を押すと、分割に設定したページごとにのどを探して分割線を動かします。中央の<b>影</b>や文字のない<b>余白</b>を手がかりにします。ページが多いと時間がかかり、途中でもう一度押すと止まります。</p>
-    <div class="note tip">図が中央にかかるページや余白がほとんどないページでは、自動調整が外れることがあります。実行後にプレビューをざっと見て、おかしいページだけ手で直してください。</div>
+    <div class="note tip">図が中央にかかるページや余白がほとんどないページでは、自動調整が外れることがあります。影のない詰まった本文では、中央の余白のまん中をのどとみなします。見開きの片側が白紙だと位置が分からないため、そのページの分割線は動かさず、通知にページ番号を表示します。実行後にプレビューをざっと見て、おかしいページだけ手で直してください。</div>
 
     <h2 id="ja-overlap"><span class="n">4</span>中央の重なり</h2>
     <p>分割線の両側をどれだけ含めるかを決めます。スライダーが中央（0%）なら分割線でぴったり切ります。</p>

@@ -484,6 +484,7 @@ const I18N = {
     tLibFail: '필요한 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 새로고침해 주세요.',
     tCleared: '모든 쪽이 기본 분할선을 따라가요.', tNoSplit: '나누기로 표시된 쪽이 없어요.',
     tFound: '{n}쪽의 제본선을 찾았어요. 미리보기에서 확인해 주세요.', tNotFound: '제본선을 뚜렷하게 찾지 못했어요. 직접 조정해 주세요.',
+    tUnsure: '{list}쪽은 제본선이 뚜렷하지 않아 분할선을 옮기지 않았어요. 직접 확인해 주세요.',
     tBuildErr: 'PDF를 만들다가 문제가 생겼어요: {msg}',
     progRead: '원본 읽는 중…', progCopy: '쪽 복사하는 중…', progSplit: '쪽 나누는 중… {i}/{n}', progSave: '저장하는 중…', progDone: '완성!',
     done: '완성했어요. ', doneInfo: '{n}쪽 · {size} ', again: '다시 받기', view: '열어 보기',
@@ -520,6 +521,7 @@ const I18N = {
     tLibFail: 'Could not load the required libraries. Check your internet connection and reload.',
     tCleared: 'All pages now follow the global split line.', tNoSplit: 'No page is marked to be split.',
     tFound: 'Found the gutter on {n} pages. Please check the previews.', tNotFound: 'Could not find a clear gutter. Please adjust manually.',
+    tUnsure: 'No clear gutter on page {list}, so its split line was left as it was. Please check it.',
     tBuildErr: 'Something went wrong while creating the PDF: {msg}',
     progRead: 'Reading source…', progCopy: 'Copying pages…', progSplit: 'Splitting pages… {i}/{n}', progSave: 'Saving…', progDone: 'Done!',
     done: 'Done. ', doneInfo: '{n} pages · {size} ', again: 'Download again', view: 'Open',
@@ -556,6 +558,7 @@ const I18N = {
     tLibFail: '无法加载所需的库，请检查网络连接后刷新页面。',
     tCleared: '所有页面已恢复为默认分割线。', tNoSplit: '没有标记为拆分的页面。',
     tFound: '已在 {n} 页找到装订线，请在预览中确认。', tNotFound: '未能明确找到装订线，请手动调整。',
+    tUnsure: '第 {list} 页的装订线不明显，分割线未移动，请手动确认。',
     tBuildErr: '生成 PDF 时出错：{msg}',
     progRead: '正在读取原文件…', progCopy: '正在复制页面…', progSplit: '正在拆分页面… {i}/{n}', progSave: '正在保存…', progDone: '完成！',
     done: '已完成。', doneInfo: '{n} 页 · {size} ', again: '再次下载', view: '打开查看',
@@ -592,6 +595,7 @@ const I18N = {
     tLibFail: '必要なライブラリを読み込めませんでした。インターネット接続を確認して再読み込みしてください。',
     tCleared: 'すべてのページが共通の分割線に従います。', tNoSplit: '分割に設定されたページがありません。',
     tFound: '{n} ページでのどを見つけました。プレビューで確認してください。', tNotFound: 'のどをはっきり見つけられませんでした。手動で調整してください。',
+    tUnsure: '{list} ページはのどがはっきりしないため、分割線を動かしませんでした。確認してください。',
     tBuildErr: 'PDF の作成中に問題が起きました: {msg}',
     progRead: '元ファイルを読み込み中…', progCopy: 'ページをコピー中…', progSplit: 'ページを分割中… {i}/{n}', progSave: '保存中…', progDone: '完成！',
     done: '完成しました。', doneInfo: '{n} ページ · {size} ', again: 'もう一度保存', view: '開く',
@@ -992,13 +996,16 @@ el.btnAuto.addEventListener('click', async () => {
   S.detecting = true;
   const gen = S.gen;
   let found = 0, done = 0;
+  const unsure = [];
   for (const i of targets) {
     if (!S.detecting || gen !== S.gen) break;
     el.btnAuto.textContent = t('autoBusy', { done, total: targets.length });
     try {
       const f = await detectGutter(i);
       if (gen !== S.gen) break;
-      if (f != null) { S.pages[i].pos = Math.round(f * 1000) / 1000; found++; }
+      // 확신이 없으면 짐작으로 옮기지 않는다(손으로 맞춘 선도 그대로). 쪽 번호만 알린다
+      if (f && f.sure) { S.pages[i].pos = Math.round(f.pos * 1000) / 1000; found++; }
+      else unsure.push(i + 1);
     } catch (err) { console.warn('detect', i, err); }
     done++;
     if (done % 4 === 0) refresh();
@@ -1007,7 +1014,9 @@ el.btnAuto.addEventListener('click', async () => {
   el.btnAuto.textContent = t('auto');
   if (gen !== S.gen) return;
   refresh();
-  toast(found ? t('tFound', { n: found }) : t('tNotFound'), 3600);
+  const list = unsure.slice(0, 8).join(', ') + (unsure.length > 8 ? ' …' : '');
+  const msg = [found ? t('tFound', { n: found }) : '', unsure.length ? t('tUnsure', { list }) : ''].filter(Boolean).join(' ');
+  toast(msg || t('tNotFound'), unsure.length ? 6000 : 3600);
 });
 
 async function detectGutter(i) {
@@ -1020,20 +1029,26 @@ async function detectGutter(i) {
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
   // print 인텐트는 requestAnimationFrame을 쓰지 않아 탭이 가려져 있어도 멈추지 않음
   await page.render({ canvasContext: ctx, viewport: vp, intent: 'print' }).promise;
+  return findGutter(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height);
+}
 
-  const W = c.width, H = c.height, d = ctx.getImageData(0, 0, W, H).data;
+// 그려 둔 펼침면(RGBA)에서 제본선을 찾는다 → { pos: 0~1, sure }. 구분할 게 없으면 null
+function findGutter(d, W, H) {
   const x0 = Math.floor(W * 0.3), x1 = Math.ceil(W * 0.7);
   const y0 = Math.floor(H * 0.08), y1 = Math.ceil(H * 0.92), n = y1 - y0;
-  const mean = [], sd = [];
+  // paper: 열마다 밝은 쪽 90% 지점 = 그 열의 종이 밝기. 글자는 줄 사이가 비어 있어 이 값을
+  // 거의 못 낮추고, 그림자는 종이까지 어둡게 한다.
+  const mean = [], sd = [], paper = [], col = new Float32Array(n);
   for (let x = x0; x < x1; x++) {
     let s = 0, s2 = 0;
     for (let y = y0; y < y1; y++) {
       const k = (y * W + x) * 4;
       const L = 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2];
-      s += L; s2 += L * L;
+      s += L; s2 += L * L; col[y - y0] = L;
     }
     const m = s / n;
     mean.push(m); sd.push(Math.sqrt(Math.max(0, s2 / n - m * m)));
+    paper.push(col.sort()[Math.floor(n * 0.9)]);
   }
   const smooth = (a, r) => a.map((_, i) => {
     let s = 0, c = 0;
@@ -1049,27 +1064,35 @@ async function detectGutter(i) {
 
   // 1) 뚜렷하고 좁은 그림자 골짜기가 있으면 그 바닥이 제본선 (책이 약간 기울어도 잘 잡힘)
   {
-    const N = ms.length;
+    const N = ms.length, ps = smooth(paper, 2);
     let dark = 0;
     for (let k = 1; k < N; k++) if (ms[k] < ms[dark]) dark = k;
     // 주변(±10%) 밝기의 중앙값을 기준선으로 삼아, 좌우 쪽 밝기가 달라도 골짜기 깊이를 제대로 잰다
     const win = Math.round(N * 0.1), core = Math.max(1, Math.round(N * 0.02));
-    const around = [];
-    for (let k = Math.max(0, dark - win); k <= Math.min(N - 1, dark + win); k++) if (Math.abs(k - dark) > core) around.push(ms[k]);
-    around.sort((a, b) => a - b);
-    const base = around.length ? around[Math.floor(around.length / 2)] : ms[dark];
-    const depth = base - ms[dark];
-    if (depth > 20) {
+    const baseOf = a => {
+      const around = [];
+      for (let k = Math.max(0, dark - win); k <= Math.min(N - 1, dark + win); k++) if (Math.abs(k - dark) > core) around.push(a[k]);
+      around.sort((p, q) => p - q);
+      return around.length ? around[Math.floor(around.length / 2)] : a[dark];
+    };
+    const base = baseOf(ms), depth = base - ms[dark];
+    // 종이 밝기도 함께 꺼져야 그림자다. 평균만 보면 줄마다 같은 자리에서 시작하는
+    // 글자 열(빽빽한 한글 본문의 왼쪽 끝)도 좁은 골짜기처럼 보여, 분할선이 본문 안으로 갔다.
+    const paperDepth = baseOf(ps) - ps[dark];
+    if (depth > 20 && paperDepth > Math.max(8, depth * 0.3)) {
       const half = base - depth * 0.5;
       let a = dark, b = dark;
       while (a > 0 && ms[a - 1] < half) a--;
       while (b < N - 1 && ms[b + 1] < half) b++;
-      if (b - a < N * 0.1 && a > 0 && b < N - 1) return clamp((x0 + dark) / W, 0.3, 0.7);
+      if (b - a < N * 0.1 && a > 0 && b < N - 1) return { pos: clamp((x0 + dark) / W, 0.3, 0.7), sure: true };
     }
   }
 
   // 2) 그림자가 없으면: 글자가 없는(세로로 균일한) 열들의 구간 가운데 중앙에 가깝고 넓은 구간
-  const thr = lo + 0.35 * (q - lo);
+  // 한쪽 쪽이 비어 열 대부분이 빈 종이면 60% 지점도 빈 종이 수준이라, 빈 쪽 안에서
+  // 아무 데나 골랐다(합성 시험: 31%·62%). 그때는 글자가 꽉 찬 위쪽 10% 열을 기준으로 삼는다.
+  const hi = sorted[Math.floor(sorted.length * 0.9)];
+  const thr = lo + 0.35 * (q - lo < 0.25 * (hi - lo) ? hi - lo : q - lo);
   const N = sds.length, center = W * 0.5 - x0;
   let best = null;
   for (let k = 0; k < N;) {
@@ -1101,9 +1124,10 @@ async function detectGutter(i) {
     if (b - a < N * 0.1 && a > best.a && b < best.b) x = dark;
   }
   // 구간이 탐색 범위 끝에 닿아 있거나 여백이라기엔 너무 넓으면(한쪽이 빈 쪽·사진 등)
-  // 제본선 위치를 알 수 없으므로 가운데로
-  if (best.a === 0 || best.b === N - 1 || best.b - best.a > N * 0.6) x = center;
-  return clamp((x0 + x) / W, 0.3, 0.7);
+  // 제본선 위치를 알 수 없으므로 가운데로 두고 확신 없음으로 알린다
+  const sure = !(best.a === 0 || best.b === N - 1 || best.b - best.a > N * 0.6);
+  if (!sure) x = center;
+  return { pos: clamp((x0 + x) / W, 0.3, 0.7), sure };
 }
 
 /* ───────── build PDF (lossless: crop boxes only) ───────── */
