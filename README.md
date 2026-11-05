@@ -1,5 +1,7 @@
 # 펼침면 나누기 (Spread Split)
 
+[English](README.en.md)
+
 두 쪽 스캔 PDF를 왼쪽·오른쪽 쪽으로 나누는 브라우저 도구
 Split two-page scanned PDF spreads into single pages — right in your browser, no install.
 
@@ -52,13 +54,7 @@ Split two-page scanned PDF spreads into single pages — right in your browser, 
 
 ## English
 
-Spread Split takes a PDF scanned two pages per sheet and cuts every spread into a left page and a right page. Everything runs in the browser; files never leave your computer. It only rewrites each page's crop box, so image quality and file size stay the same.
-
-- Use it at https://chaekgalpi.co.kr/apps/spreadsplit/ or open `index.html` locally. The old address https://microhan1.github.io/spread-split/ redirects there automatically.
-- Adjust the split line per page, auto-detect the gutter, add an overlap, and choose left-to-right or right-to-left order.
-- Interface and [user guide](https://chaekgalpi.co.kr/apps/spreadsplit/guide.html#en) in Korean, English, Chinese (Simplified) and Japanese.
-- Feedback: use "Send feedback" at the bottom of the page or https://chaekgalpi.co.kr/en/tools/spreadsplit#feedback (no sign-in), or open a [GitHub issue](https://github.com/microhan1/spread-split/issues).
-- Finished the book? Log it on [Chaekgalpi Library](https://chaekgalpi.co.kr/tools/spreadsplit?utm_source=github&utm_medium=referral&utm_campaign=tool_cta&utm_content=spreadsplit), a web service for keeping track of the books you read (Korean only).
+The full English README is [README.en.md](README.en.md).
 
 ## 라이선스 / License
 
