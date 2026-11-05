@@ -623,6 +623,10 @@ const t = (key, vars) => {
   return s;
 };
 function detectLang() {
+  // 주소의 ?lang= 이 먼저 — 책갈피 영어 툴 페이지의 「브라우저에서 열기」(?lang=en)가 저장값·브라우저 언어보다 앞선다. 저장하지는 않는다(직접 고른 것만 저장).
+  let q = null;
+  try { q = new URLSearchParams(location.search).get('lang'); } catch { /* 옛 브라우저 */ }
+  if (I18N[q]) return q;
   const saved = store.get(LANG_KEY);
   if (I18N[saved]) return saved;
   for (const l of navigator.languages || [navigator.language || 'en']) {

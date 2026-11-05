@@ -70,6 +70,22 @@ test('결과 PDF 에 원본 제목·저자를 옮기지 않는다', () => {
   assert.ok(b.includes("out.setProducer(t('producer'))"));
 });
 
+test('주소의 ?lang= 이 저장값·브라우저 언어보다 먼저다 (책갈피 영어 툴 페이지에서 ?lang=en 으로 열림)', () => {
+  const start = HTML.indexOf('function detectLang() {'), end = HTML.indexOf('function applyLang(');
+  assert.ok(start > 0 && end > start, 'detectLang 구간을 찾음');
+  const run = (search, saved, langs) => {
+    const ctx = vm.createContext({ I18N: { ko: {}, en: {}, ja: {}, zh: {} }, LANG_KEY: 'k', store: { get: () => saved }, location: { search }, navigator: { languages: langs }, URLSearchParams });
+    vm.runInContext(HTML.slice(start, end) + ' detectLang()', ctx);
+    return vm.runInContext('detectLang()', ctx);
+  };
+  assert.equal(run('?lang=en', 'ko', ['ko']), 'en');      // 저장값 ko·브라우저 ko 라도 주소가 이긴다
+  assert.equal(run('?lang=en&x=1', null, ['ko']), 'en');
+  assert.equal(run('?lang=fr', null, ['ko']), 'ko');      // 모르는 언어는 무시 → 브라우저 언어
+  assert.equal(run('', 'ja', ['ko']), 'ja');              // 주소에 없으면 저장값
+  assert.equal(run('', null, ['de', 'zh-CN']), 'zh');     // 저장값도 없으면 브라우저 언어 순
+  assert.equal(run('', null, ['de']), 'en');
+});
+
 test('언어를 바꾸면 만들어 둔 결과 칸도 새 언어로 다시 그린다', () => {
   const h = HTML.slice(HTML.indexOf("document.getElementById('lang').addEventListener('change'"), HTML.indexOf('if (!window.pdfjsLib'));
   assert.match(h, /if \(!el\.done\.hidden\) paintDone\(\);/);
