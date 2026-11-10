@@ -9,6 +9,7 @@ if (location.hostname.endsWith('github.io')) location.replace('https://chaekgalp
 <link rel="canonical" href="https://chaekgalpi.co.kr/apps/spreadsplit/guide.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>펼침면 나누기 사용 설명</title>
+<meta name="description" content="펼침면 나누기(두쪽 나누기) 브라우저 도구 사용 설명. 두 쪽이 한 장에 담긴 스캔 PDF를 왼쪽·오른쪽 쪽으로 나누는 방법.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='17' y='7' width='12' height='18' rx='2' fill='%231d1d1b'/%3E%3Crect x='15.25' y='3' width='1.5' height='26' rx='.75' fill='%23e5484d'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -670,13 +671,20 @@ article.doc.active { display: block; }
     get: k => { try { return localStorage.getItem(k); } catch { return null; } },
     set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
   };
+  // 주소의 ?lang= 값 → 화면 언어. 책갈피 웹판 공통 표기(ko·en·ja·zh-CN). index.html 의 URL_LANGS 와 같다.
+  const URL_LANGS = { ko: 'ko', en: 'en', ja: 'ja', 'zh-cn': 'zh', zh: 'zh' };
   function pick() {
+    // 다른 책갈피 웹판과 같은 순서(11-09 결정): ① 주소의 ?lang=, 또는 도구 화면이 붙여 주는 #ko·#en-overlap 같은 절 표시 ② 저장값 ③ 한국어.
+    // 브라우저 언어는 보지 않는다(10-29 v1.148, 검색 로봇 색인 문제). 주소로 연 언어는 저장하지 않는다.
+    let q = null;
+    try { q = new URLSearchParams(location.search).get('lang'); } catch { /* 옛 브라우저 */ }
+    const byUrl = URL_LANGS[String(q || '').toLowerCase()];
+    if (byUrl) return byUrl;
     const h = location.hash.replace('#', '').slice(0, 2);
     if (UI[h]) return h;
     const saved = store.get(KEY);
     if (UI[saved]) return saved;
-    for (const l of navigator.languages || [navigator.language || 'en']) { const p = l.toLowerCase().slice(0, 2); if (UI[p]) return p; }
-    return 'en';
+    return 'ko';
   }
   function show(lang, updateHash) {
     document.documentElement.lang = lang;
@@ -684,6 +692,7 @@ article.doc.active { display: block; }
     document.getElementById('brandName').textContent = UI[lang].brand;
     document.getElementById('brandSub').textContent = UI[lang].sub;
     document.getElementById('openTool').textContent = UI[lang].open;
+    document.getElementById('openTool').href = lang === 'ko' ? 'index.html' : 'index.html?lang=' + (lang === 'zh' ? 'zh-CN' : lang);
     document.getElementById('foot').textContent = UI[lang].foot;
     document.querySelectorAll('article.doc').forEach(a => a.classList.toggle('active', a.dataset.lang === lang));
     sel.value = lang;

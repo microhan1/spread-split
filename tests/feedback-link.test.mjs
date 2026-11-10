@@ -49,14 +49,14 @@ function fakeDom() {
 }
 
 /* index.html 스크립트에서 i18n ~ applyLang 까지(「const I18N」부터 「const $ =」 앞까지)만 떼어 돌린다. */
-function loadI18n({ languages = ['ko-KR'], saved = null } = {}) {
+function loadI18n({ languages = ['ko-KR'], saved = null, search = '' } = {}) {
   const start = HTML.indexOf('const I18N = {');
   const end = HTML.indexOf('const $ = (s, r = document)');
   assert.ok(start > 0 && end > start, 'i18n 구간을 찾음');
   const document = fakeDom();
   const mem = saved ? { 'spreadSplit.lang': saved } : {};
   const ctx = vm.createContext({
-    document, navigator: { languages, language: languages[0] },
+    document, navigator: { languages, language: languages[0] }, location: { search }, URLSearchParams,
     localStorage: { getItem: k => mem[k] ?? null, setItem: (k, v) => { mem[k] = String(v); } },
   });
   const api = vm.runInContext(HTML.slice(start, end) + ';({ I18N, applyLang, detectLang, t, lang: () => LANG })', ctx);
@@ -125,26 +125,28 @@ test('b. 모든 언어 쌍 순서로 바꿔도 앞 언어 주소가 남지 않�
   }
 });
 
-test('b. 알 수 없는 언어는 이 앱의 기본 언어(en)로 → /en/', () => {
+test('b. 알 수 없는 언어는 이 앱의 기본 언어(ko, 11-09 결정)로 → 한국어 경로', () => {
   const s = loadI18n();
   for (const bad of ['fr', 'zh-CN', 'KO', '', undefined, null]) {
-    s.applyLang('ko');
+    s.applyLang('en');
     s.applyLang(bad);
-    assert.equal(s.lang(), 'en', String(bad));
-    expectFeedback(s.link().href, 'en');
+    assert.equal(s.lang(), 'ko', String(bad));
+    expectFeedback(s.link().href, 'ko');
   }
-  // 'I18N[lang]' 검사를 통과하는 원래부터의 틈('__proto__')에서도 의견 링크는 기본 언어 쪽 /en/ 이다
+  // 'I18N[lang]' 검사를 통과하는 원래부터의 틈('__proto__')에서도 의견 링크는 영어 쪽(/en/)이다 — ko 가 아니면 모두 /en/
   s.applyLang('ko'); s.applyLang('__proto__');
   expectFeedback(s.link().href, 'en');
 });
 
-test('b. 첫 화면 언어(브라우저 언어·저장값)에 맞는 주소', () => {
+test('b. 첫 화면 언어(주소 ?lang= · 저장값 · 기본 ko, 브라우저 언어 무시)에 맞는 주소', () => {
   const cases = [
-    [{ languages: ['ko-KR', 'en'] }, 'ko'],
-    [{ languages: ['ja-JP'] }, 'ja'],
-    [{ languages: ['zh-CN', 'zh'] }, 'zh'],
-    [{ languages: ['fr-FR', 'de'] }, 'en'],
-    [{ languages: ['en-US'], saved: 'ko' }, 'ko'],
+    [{ languages: ['en-US', 'en'] }, 'ko'],                 // 영어 브라우저라도 한국어
+    [{ languages: ['ja-JP'] }, 'ko'],
+    [{ languages: ['en-US'], search: '?lang=ja' }, 'ja'],
+    [{ languages: ['en-US'], search: '?lang=zh-CN' }, 'zh'],
+    [{ languages: ['en-US'], search: '?lang=fr' }, 'ko'],   // 모르는 값은 버림
+    [{ languages: ['en-US'], saved: 'en' }, 'en'],
+    [{ languages: ['en-US'], saved: 'ja', search: '?lang=ko' }, 'ko'],
     [{ languages: ['ko-KR'], saved: 'xx' }, 'ko'],
   ];
   for (const [opt, want] of cases) {

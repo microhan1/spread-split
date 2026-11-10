@@ -19,7 +19,7 @@ When you scan a book lying open, each sheet holds two pages. This tool cuts ever
 - **Center overlap**: keep the area around the gutter on both pages (+) or cut the shadow in the middle away (−).
 - **Reading order**: left to right, or right to left for vertical-text books and Japanese manga.
 - A tall cover page is left whole. Each page can be set to split, whole or skip.
-- Interface and user guide in **Korean · English · Chinese (Simplified) · Japanese**. The language follows your browser; change it at the top right. `?lang=en` in the address opens the English screen directly.
+- Interface and user guide in **Korean · English · Chinese (Simplified) · Japanese**. It opens in Korean by default; pick a language at the top right and the choice is remembered. Add `?lang=en` (or `?lang=ja`, `?lang=zh-CN`) to the address to open that language directly. The browser language setting is not used.
 
 <img src="docs/images/screenshot.png" alt="The Spread Split page" width="720">
 

@@ -622,21 +622,22 @@ const t = (key, vars) => {
   if (vars) for (const k in vars) s = s.replaceAll('{' + k + '}', vars[k]);
   return s;
 };
+// 주소의 ?lang= 값 → 화면 언어. 책갈피 웹판 공통 표기(ko·en·ja·zh-CN). 대소문자는 가리지 않고, 모르는 값은 버린다.
+const URL_LANGS = { ko: 'ko', en: 'en', ja: 'ja', 'zh-cn': 'zh', zh: 'zh' };
 function detectLang() {
-  // 주소의 ?lang= 이 먼저 — 책갈피 영어 툴 페이지의 「브라우저에서 열기」(?lang=en)가 저장값·브라우저 언어보다 앞선다. 저장하지는 않는다(직접 고른 것만 저장).
+  // 다른 책갈피 웹판과 같은 순서(11-09 결정): ① 주소의 ?lang= ② 화면에서 골라 저장한 값 ③ 한국어.
+  // 브라우저 언어(navigator.language)는 보지 않는다 — 구글 로봇이 영어 브라우저로 그려 한국어 주소가 영어 제목으로 색인될 수 있어서(10-29 v1.148).
+  // 주소로 연 언어는 저장하지 않는다(직접 고른 것만 저장). 영어 툴 페이지의 「브라우저에서 열기」는 ?lang=en 을 붙여 준다.
   let q = null;
   try { q = new URLSearchParams(location.search).get('lang'); } catch { /* 옛 브라우저 */ }
-  if (I18N[q]) return q;
+  const byUrl = URL_LANGS[String(q || '').toLowerCase()];
+  if (byUrl) return byUrl;
   const saved = store.get(LANG_KEY);
   if (I18N[saved]) return saved;
-  for (const l of navigator.languages || [navigator.language || 'en']) {
-    const p = l.toLowerCase().slice(0, 2);
-    if (I18N[p]) return p;
-  }
-  return 'en';
+  return 'ko';
 }
 function applyLang(lang) {
-  LANG = I18N[lang] ? lang : 'en';
+  LANG = I18N[lang] ? lang : 'ko';
   document.documentElement.lang = LANG;
   document.title = t('docTitle');
   document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });

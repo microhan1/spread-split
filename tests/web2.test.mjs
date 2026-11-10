@@ -70,20 +70,73 @@ test('결과 PDF 에 원본 제목·저자를 옮기지 않는다', () => {
   assert.ok(b.includes("out.setProducer(t('producer'))"));
 });
 
-test('주소의 ?lang= 이 저장값·브라우저 언어보다 먼저다 (책갈피 영어 툴 페이지에서 ?lang=en 으로 열림)', () => {
-  const start = HTML.indexOf('function detectLang() {'), end = HTML.indexOf('function applyLang(');
-  assert.ok(start > 0 && end > start, 'detectLang 구간을 찾음');
-  const run = (search, saved, langs) => {
-    const ctx = vm.createContext({ I18N: { ko: {}, en: {}, ja: {}, zh: {} }, LANG_KEY: 'k', store: { get: () => saved }, location: { search }, navigator: { languages: langs }, URLSearchParams });
-    vm.runInContext(HTML.slice(start, end) + ' detectLang()', ctx);
-    return vm.runInContext('detectLang()', ctx);
+/* ── 언어 결정 (11-09 사장님 결정 A, 다른 책갈피 웹판과 같음): ① 주소 ?lang= ② 저장값 ③ 한국어. 브라우저 언어는 보지 않는다 ── */
+// navigator 를 건드리면 바로 알 수 있게, 읽는 순간 기록하는 가짜를 준다.
+const spyNavigator = log => ({ get languages() { log.push('languages'); return ['en-US', 'en']; }, get language() { log.push('language'); return 'en-US'; } });
+
+test('도구 화면: 주소 ?lang= → 저장값 → 한국어. 브라우저 언어(en-US)는 보지 않고, 주소로 연 언어는 저장하지 않는다', () => {
+  const start = HTML.indexOf('const URL_LANGS = {'), end = HTML.indexOf('function applyLang(');
+  assert.ok(start > 0 && end > start, 'URL_LANGS·detectLang 구간을 찾음');
+  const run = (search, saved) => {
+    const touched = [], set = [];
+    const ctx = vm.createContext({ I18N: { ko: {}, en: {}, ja: {}, zh: {} }, LANG_KEY: 'k', store: { get: () => saved, set: (k, v) => set.push(v) },
+      location: { search }, navigator: spyNavigator(touched), URLSearchParams });
+    vm.runInContext(HTML.slice(start, end), ctx);
+    const lang = vm.runInContext('detectLang()', ctx);
+    assert.deepEqual(touched, [], `navigator 를 읽지 않는다 (${search || '주소 없음'})`);
+    assert.deepEqual(set, [], `주소로 연 언어를 저장하지 않는다 (${search || '주소 없음'})`);
+    return lang;
   };
-  assert.equal(run('?lang=en', 'ko', ['ko']), 'en');      // 저장값 ko·브라우저 ko 라도 주소가 이긴다
-  assert.equal(run('?lang=en&x=1', null, ['ko']), 'en');
-  assert.equal(run('?lang=fr', null, ['ko']), 'ko');      // 모르는 언어는 무시 → 브라우저 언어
-  assert.equal(run('', 'ja', ['ko']), 'ja');              // 주소에 없으면 저장값
-  assert.equal(run('', null, ['de', 'zh-CN']), 'zh');     // 저장값도 없으면 브라우저 언어 순
-  assert.equal(run('', null, ['de']), 'en');
+  assert.equal(run('', null), 'ko');                 // 영어 브라우저라도 아무것도 없으면 한국어
+  assert.equal(run('?lang=en', null), 'en');
+  assert.equal(run('?lang=ja', null), 'ja');
+  assert.equal(run('?lang=zh-CN', null), 'zh');      // 공통 표기 zh-CN → 화면 언어 zh
+  assert.equal(run('?lang=ZH-cn', null), 'zh');      // 대소문자 무시
+  assert.equal(run('?lang=en&x=1', 'ko'), 'en');     // 저장값 ko 라도 주소가 이긴다
+  assert.equal(run('?lang=fr', null), 'ko');         // 모르는 값은 버림 → 한국어
+  assert.equal(run('?lang=fr', 'ja'), 'ja');         // 모르는 값은 버림 → 저장값
+  assert.equal(run('', 'ja'), 'ja');                 // 화면에서 고른 저장값
+  assert.equal(run('?lang=ko', 'ja'), 'ko');         // 저장값 ja 상태에서 ?lang=ko → 한국어 (저장값은 그대로)
+});
+
+test('사용 설명: 주소 ?lang= → #ko 같은 절 표시 → 저장값 → 한국어. 브라우저 언어는 보지 않는다', () => {
+  const start = GUIDE.indexOf('const URL_LANGS = {'), end = GUIDE.indexOf('function show(');
+  assert.ok(start > 0 && end > start, 'URL_LANGS·pick 구간을 찾음');
+  const run = (search, hash, saved) => {
+    const touched = [];
+    const ctx = vm.createContext({ UI: { ko: {}, en: {}, ja: {}, zh: {} }, KEY: 'k', store: { get: () => saved, set: () => {} },
+      location: { search, hash }, navigator: spyNavigator(touched), URLSearchParams });
+    vm.runInContext(GUIDE.slice(start, end), ctx);
+    const lang = vm.runInContext('pick()', ctx);
+    assert.deepEqual(touched, [], `navigator 를 읽지 않는다 (${search} ${hash})`);
+    return lang;
+  };
+  assert.equal(run('', '', null), 'ko');
+  assert.equal(run('?lang=en', '', null), 'en');
+  assert.equal(run('?lang=zh-CN', '', null), 'zh');
+  assert.equal(run('', '#en-overlap', null), 'en');  // 도구 화면의 「사용 설명」 링크(guide.html#en)와 절 주소
+  assert.equal(run('?lang=ja', '#en', null), 'ja');  // 둘 다 있으면 ?lang= 이 먼저
+  assert.equal(run('', '', 'zh'), 'zh');
+  assert.equal(run('', '#xx', 'ja'), 'ja');
+});
+
+test('사용 설명의 「도구 열기」는 보고 있는 언어를 ?lang= 으로 넘긴다 (한국어는 붙이지 않음)', () => {
+  assert.ok(GUIDE.includes("document.getElementById('openTool').href = lang === 'ko' ? 'index.html' : 'index.html?lang=' + (lang === 'zh' ? 'zh-CN' : lang);"));
+});
+
+test('정적 HTML 기본값은 한국어: <html lang="ko">, 한국어 title·description, 스크립트에 navigator.language 없음', () => {
+  for (const [name, s] of [['index.html', HTML], ['guide.html', GUIDE]]) {
+    assert.ok(s.includes('<html lang="ko">'), `${name} html lang`);
+    assert.match(s.match(/<title>([^<]*)<\/title>/)[1], /[가-힣]/, `${name} title 한국어`);
+    assert.match(s.match(/<meta name="description" content="([^"]*)">/)[1], /^[가-힣]/, `${name} description 한국어로 시작`);
+    const code = [...s.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n')
+      .split('\n').filter(l => !l.trim().startsWith('//')).join('\n');   // 설명 주석은 뺀다
+    assert.ok(!/navigator\.language/.test(code), `${name} 스크립트가 navigator.language 를 쓰지 않는다`);
+  }
+  for (const name of ['README.md', 'README.en.md']) {
+    const r = fs.readFileSync(path.join(ROOT, name), 'utf8');
+    assert.ok(!/브라우저 언어에 맞춰 자동|follows your browser/.test(r), `${name} 에 「브라우저 언어 자동」 설명이 없다`);
+  }
 });
 
 test('언어를 바꾸면 만들어 둔 결과 칸도 새 언어로 다시 그린다', () => {
